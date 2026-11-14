@@ -28,7 +28,7 @@ SPDX-License-Identifier: MIT
 
 ---
 
-## Executive Summary
+## Summary
 
 I designed and built **ALS SubZero** as an in-flight network memory filesystem. Files live inside network cables while in transit, rather than resting on a solid-state drive, a hard disk, or local computer RAM chips.
 
