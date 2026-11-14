@@ -29,7 +29,6 @@ SPDX-License-Identifier: MIT
 ---
 
 <!-- Schema.org Structured Metadata for Search Crawlers and AI Indexers -->
-<script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
