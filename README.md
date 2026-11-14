@@ -266,36 +266,22 @@ Even when 151 packets were dropped by the network, the autonomous scrubber recon
 │   ├── benchmark_chart.png
 │   ├── frame_structure.png
 │   ├── recovery_pipeline.png
-│   └── thumbnails/            # High-impact social media post thumbnails
-│       ├── thumbnail_youtube_16x9.png
-│       ├── thumbnail_twitter_card.png
-│       ├── thumbnail_linkedin_post.png
-│       └── thumbnail_square.png
 ├── diagrams/                  # Standalone interactive HTML diagrams
 │   ├── architecture.html      # System architecture
 │   ├── dataflow.html          # In-flight dataflow
 │   └── sequence.html          # Self-healing read/write sequence
 ├── tests/                     # Automated test suite (20 tests, zero external deps)
 ├── scripts/
-│   ├── run_demo.py            # Live visual demonstration script
-│   ├── run_benchmark.py       # Reliability and packet loss benchmark
-│   ├── build_research_paper_pdf.py # Formal 8-page academic paper builder
-│   ├── generate_media_assets.py    # Media asset generator
-│   ├── generate_social_thumbnails.py # Social thumbnail generator
-│   └── package_release.py     # Clean GitHub release archive builder
-├── paper/                     # Complete reproducible scientific paper (PDF & LaTeX sources)
-│   ├── main.pdf               # Compiled 8-page preprint paper
-│   ├── ALS_SubZero_Research_Paper.pdf # Compiled paper copy
-│   ├── main.tex               # Master LaTeX source
-│   ├── paper/sections/        # Full paper sections (00 to 90)
-│   ├── paper/supplement/      # Supplementary material & mathematical proofs
-│   └── research/data/         # Empirical benchmark data & verified manifest
-├── codemeta.json              # Standard software metadata (Schema.org / CodeMeta 2.0)
-├── llms.txt                   # LLM crawler summary specification
-├── llms-full.txt              # LLM full context documentation
-├── hosts.example              # Sample public and local reflector list
-├── Makefile                   # Top-level build and test automation
-└── pyproject.toml             # Python packaging configuration
+│   ├── run_demo.py                           # Live visual demonstration script
+│   ├── run_benchmark.py                      # Reliability and packet loss benchmark
+│   └── package_release.py                    # Clean GitHub release archive builder
+├── codemeta.json                             # Standard software metadata (Schema.org / CodeMeta 2.0)
+├── llms.txt                                  # LLM crawler summary specification
+├── llms-full.txt                             # LLM full context documentation
+├── hosts.example                             # Sample public and local reflector list
+├── Makefile                                  # Top-level build and test automation
+├──pyproject.toml                             # Python packaging configuration
+└── ALS_SubZero_Research_Paper.pdf            # Python packaging configuration
 ```
 
 ---
@@ -349,16 +335,6 @@ Commands:
 ```
 
 ---
-
-## Scientific Manuscript & Academic Reproducibility
-
-The complete scientific paper describing ALS SubZero is located in the [paper/](paper/) directory:
-- **Title**: *ALS SubZero: A Dynamic Delay-Line Network Memory Filesystem with Erasure-Coded Flight Persistence*
-- **Author**: Samin Sami (CRediT author roles registered in `project/contributors.json`)
-- **Compiled Paper PDF**: [paper/main.pdf](paper/main.pdf) (8-page preprint matching the official template layout).
-- **Manuscript Validation**: All 24 TeX files validated with 0 errors and 0 warnings under `python tools/scripts/check_project.py --submission`.
-- **Reproducibility**: Verified with 0 errors and 0 warnings under `python tools/scripts/check_reproducibility.py`.
-- **Data Manifest**: Canonical benchmark data recorded in `research/data/source/benchmark_results.csv` with SHA256 checksum.
 
 ### Citation Format (BibTeX)
 
