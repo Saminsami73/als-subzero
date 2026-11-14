@@ -34,7 +34,7 @@ SPDX-License-Identifier: MIT
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "ALS SubZero",
-  "applicationCategory": "Filesystem / Operating System Utility",
+  "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Linux, macOS, Windows",
   "author": {
     "@type": "Person",
