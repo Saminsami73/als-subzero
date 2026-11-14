@@ -261,8 +261,11 @@ Even when 151 packets were dropped by the network, the autonomous scrubber recon
 ├── llms-full.txt                             # LLM full context documentation
 ├── hosts.example                             # Sample public and local reflector list
 ├── Makefile                                  # Top-level build and test automation
-├──pyproject.toml                             # Python packaging configuration
-└── ALS_SubZero_Research_Paper.pdf            # Python packaging configuration
+├── pyproject.toml                            # Python packaging configuration
+├── ALS_SubZero_Research_Paper.pdf            # Research paper conducted on ALS SubZero
+├──ALS_SubZero_Mathematical_Calculations_and_Proofs.pdf
+└──ALS_SubZero_Complete_Handwritten_Math_Calculations.pdf
+
 ```
 
 ---
