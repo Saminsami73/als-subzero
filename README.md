@@ -47,30 +47,6 @@ SPDX-License-Identifier: MIT
 }
 </script>
 
-## Social Thumbnails & Media Showcase
-
-<div align="center">
-  <img src="assets/thumbnails/thumbnail_youtube_16x9.png" alt="ALS SubZero YouTube & Hero Thumbnail" width="920"/>
-  <p><em>Figure 1: Official high-impact 16:9 hero thumbnail for video overviews and social preview cards.</em></p>
-</div>
-
-<div align="center">
-  <table>
-    <tr>
-      <td width="50%">
-        <img src="assets/thumbnails/thumbnail_twitter_card.png" alt="Twitter / X Card" width="100%"/>
-        <p align="center"><em>Figure 2: Twitter / X preview card thumbnail.</em></p>
-      </td>
-      <td width="50%">
-        <img src="assets/thumbnails/thumbnail_linkedin_post.png" alt="LinkedIn Showcase" width="100%"/>
-        <p align="center"><em>Figure 3: LinkedIn research & systems engineering banner.</em></p>
-      </td>
-    </tr>
-  </table>
-</div>
-
----
-
 ## Executive Summary
 
 I designed and built **ALS SubZero** as an in-flight network memory filesystem. Files live inside network cables while in transit, rather than resting on a solid-state drive, a hard disk, or local computer RAM chips.
