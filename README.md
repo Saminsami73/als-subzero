@@ -28,24 +28,6 @@ SPDX-License-Identifier: MIT
 
 ---
 
-<!-- Schema.org Structured Metadata for Search Crawlers and AI Indexers -->
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "ALS SubZero",
-  "applicationCategory": "UtilitiesApplication",
-  "operatingSystem": "Linux, macOS, Windows",
-  "author": {
-    "@type": "Person",
-    "name": "Samin Sami",
-    "alternateName": "Samin Yasar Al Sami"
-  },
-  "description": "Dynamic delay-line network memory filesystem that stores data in continuous motion across IP network paths with zero local disk writes and Cauchy Reed-Solomon erasure coding.",
-  "license": "https://opensource.org/licenses/MIT",
-  "codeRepository": "https://github.com/Saminsami73/als-subzero"
-}
-</script>
-
 ## Executive Summary
 
 I designed and built **ALS SubZero** as an in-flight network memory filesystem. Files live inside network cables while in transit, rather than resting on a solid-state drive, a hard disk, or local computer RAM chips.
