@@ -1,0 +1,22 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+
+# C build artifacts
+src/c/*.o
+src/c/als-subzero
+*.o
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Output artifacts
+*.zip
+.archify/*/*.finalize-summary.json
+.archify/*/*.evidence.json

@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "als-subzero"
+version = "2.0.0"
+authors = [
+  { name = "Samin Sami" }
+]
+description = "ALS SubZero: Dynamic Delay-Line Network Memory Filesystem & Storage Engine"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+keywords = ["filesystem", "network", "icmp", "delay-line", "fec", "erasure-coding", "als-subzero"]
+
+[project.scripts]
+als-subzero = "als_subzero.cli.main:main"
+subzero = "als_subzero.cli.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

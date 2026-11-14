@@ -1,0 +1,47 @@
+# ALS SubZero
+
+> Dynamic Delay-Line Network Memory Filesystem with Erasure-Coded Flight Persistence.
+> Designed and built by Samin Sami (ALS = "Al Sami", from Samin Yasar AL Sami).
+> Repository: https://github.com/Saminsami73/als-subzero
+> License: MIT
+
+## Overview
+
+ALS SubZero is an in-flight network memory filesystem. It stores files entirely in motion across IP networks without writing payload bytes to local solid-state drives or magnetic disks. Data chunks circulate as IP packets through remote echo reflectors.
+
+## Key Technical Specifications
+
+- Creator & Lead Engineer: Samin Sami
+- Protocol: ALS1 (magic bytes 0x41 0x4C 0x53 0x31)
+- Header Size: 24 bytes fixed binary framing with Castagnoli CRC32C (0x82F63B78)
+- Chunk Size: 4096 bytes default
+- Erasure Coding: Cauchy Reed-Solomon over Galois Field GF(2^8), default K=4 data chunks, M=2 parity chunks
+- Resilience: 100% bit-exact recovery under simulated packet loss up to 10.0%
+- Departure Pacer: Microsecond-precision priority queue preventing local socket buffer saturation
+- Supported Transports: Unprivileged UDP reflectors, raw ICMP echo requests (RFC 792), simulated network transport
+- Management Interfaces: Interactive CLI shell (subzero:/$), Python library (SubZeroEngine), REST Control Plane (port 8080)
+
+## Core Files
+
+- `src/als_subzero/core/engine.py`: Primary delay-line engine and background parity scrubber
+- `src/als_subzero/core/framing.py`: 24-byte ALS1 binary frame parser and serializer with CRC32C
+- `src/als_subzero/core/pacer.py`: Microsecond departure queue scheduler
+- `src/als_subzero/fec/parity.py`: Cauchy Reed-Solomon codec over GF(2^8) with precomputed exp/log tables
+- `src/als_subzero/net/transport.py`: Multi-protocol transport layer (UDP, ICMP, Simulation)
+- `src/als_subzero/vfs/filesystem.py`: Inode-based POSIX virtual filesystem
+- `src/als_subzero/cli/main.py`: Command-line entry points (als-subzero, subzero)
+- `src/als_subzero/api/server.py`: REST Control Plane and web telemetry dashboard
+- `src/c/als_subzero.c`: Native C implementation for POSIX environments
+
+## Quick Verification
+
+```bash
+# Run full unit test suite (20 tests)
+python tests/run_all.py
+
+# Run packet loss recovery benchmark suite
+python scripts/run_benchmark.py
+
+# Run live interactive demonstration
+python scripts/run_demo.py
+```

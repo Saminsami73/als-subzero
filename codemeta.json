@@ -1,0 +1,58 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "name": "ALS SubZero",
+  "identifier": "als-subzero",
+  "version": "2.0.0",
+  "description": "Dynamic delay-line network memory filesystem that stores data in flight across IP network paths with zero local disk writes and Cauchy Reed-Solomon erasure coding.",
+  "abstract": "ALS SubZero turns network packet propagation delay into volatile, self-healing memory. Data is chunked into 4096-byte blocks, encoded with Cauchy Reed-Solomon parity over GF(2^8), framed with 24-byte binary headers (magic ALS1) and Castagnoli CRC32C checksums, and continuously circulated across remote IP echo reflectors. A microsecond-precision departure pacer prevents socket saturation, and an autonomous parity scrubber reconstructs missing chunks in flight under packet loss rates up to 10.0%.",
+  "license": "https://spdx.org/licenses/MIT",
+  "codeRepository": "https://github.com/Saminsami73/als-subzero",
+  "issueTracker": "https://github.com/Saminsami73/als-subzero/issues",
+  "programmingLanguage": [
+    "Python",
+    "C"
+  ],
+  "runtimePlatform": [
+    "Python 3.9+",
+    "Linux (x86_64, aarch64)",
+    "POSIX compliant systems",
+    "Windows (simulation and client modes)"
+  ],
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Samin Yasar",
+      "familyName": "Al Sami",
+      "name": "Samin Sami",
+      "roleName": "Creator, Lead Software Engineer, Author",
+      "email": "samin.sami@10x.ai"
+    }
+  ],
+  "maintainer": [
+    {
+      "@type": "Person",
+      "name": "Samin Sami"
+    }
+  ],
+  "keywords": [
+    "network-filesystem",
+    "delay-line-memory",
+    "erasure-coding",
+    "cauchy-reed-solomon",
+    "in-flight-storage",
+    "galois-field",
+    "packet-pacing",
+    "icmp-storage",
+    "udp-reflector",
+    "volatile-memory",
+    "als-subzero",
+    "samin-sami"
+  ],
+  "dateCreated": "2026-11-14",
+  "dateModified": "2026-11-14",
+  "softwareRequirements": [
+    "Python >= 3.9",
+    "GCC or Clang (optional, for C native build)"
+  ]
+}

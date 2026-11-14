@@ -1,0 +1,55 @@
+# ALS SubZero: Complete Technical Reference
+
+Designed and built by Samin Sami (ALS = "Al Sami", from Samin Yasar AL Sami).
+Repository: https://github.com/Saminsami73/als-subzero
+License: MIT
+
+## 1. System Summary
+
+ALS SubZero stores digital files in flight across computer networks instead of storing them on physical disks. The architecture revives the concept of acoustic mercury delay-line memory used in early computers such as the EDSAC (1949) and UNIVAC (1953), translating physical sound delay into IP packet propagation delay.
+
+The total data capacity of any network link is governed by the Bandwidth-Delay Product (BDP):
+Capacity (bits) = Usable Bandwidth (bps) * Round-Trip Time (seconds)
+
+For example, a 1 Gbps link with a 40 ms round-trip latency holds 5.0 megabytes in flight.
+
+## 2. ALS1 Binary Protocol Frame Specification
+
+Every packet in flight carries a fixed 24-byte binary header packed in network byte order (Big Endian), followed by the payload:
+
+| Offset | Type | Field Name | Description |
+|---|---|---|---|
+| 0..3 | 4 bytes | Magic | ASCII "ALS1" (0x41 0x4C 0x53 0x31) |
+| 4..5 | 2 bytes | Version | Major.minor (0x0100 for version 1.0) |
+| 6..7 | 2 bytes | Flags | Bit 0: Parity chunk flag, Bits 1..15: Reserved |
+| 8..11 | 4 bytes | Inode ID | Virtual filesystem inode index |
+| 12..15 | 4 bytes | Chunk Index | Sequential block offset within file |
+| 16..17 | 2 bytes | Payload Length | Byte count of payload (0..4096) |
+| 18..19 | 2 bytes | Hop Count | Number of round-trip loops completed |
+| 20..23 | 4 bytes | Checksum | Castagnoli CRC32C over header + payload |
+
+## 3. Cauchy Reed-Solomon Erasure Coding
+
+To survive network packet drops without disk storage, ALS SubZero uses Cauchy Reed-Solomon error correction over Galois Field GF(2^8):
+- Irreducible polynomial: P(x) = x^8 + x^4 + x^3 + x^2 + 1 (0x11D / 285)
+- Standard ratio: K=4 data chunks, M=2 parity chunks per stripe
+- Generator matrix: A = [a_{i,j}] = 1 / (x_i XOR y_j) where x_i and y_j are distinct field elements
+- Property: Any square submatrix of a Cauchy matrix is invertible over GF(2^8)
+- Resilience: Any K surviving chunks out of K + M are sufficient to reconstruct all lost data chunks
+
+## 4. Microsecond Departure Pacing
+
+To prevent network socket overflow when round-trip times are low (e.g. sub-millisecond LAN paths), the engine includes a microsecond departure pacer:
+- Priority queue ordered by scheduled release timestamp
+- Equation: t_release = t_now + (T_target - (t_now - t_epoch))
+- Enforces minimum spacing of 100 microseconds between consecutive packet departures
+- Prevents burst drops and queue exhaustion
+
+## 5. Verification Commands
+
+1. Unit tests:
+   `python tests/run_all.py` (20 tests verifying framing, CRC32C, Cauchy FEC, pacer, VFS)
+2. Benchmark:
+   `python scripts/run_benchmark.py` (tests 0%, 2%, 5%, and 10% packet drop rates with 100% data recovery)
+3. Demo:
+   `python scripts/run_demo.py` (runs a live 5-step demonstration with animated circulation metrics)
