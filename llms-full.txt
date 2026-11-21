@@ -1,0 +1,105 @@
+# ALS SubZero: Technical Documentation
+
+Built by Samin Sami.  
+ALS stands for "Al Sami" (first 3 letters of Samin Yasar AL Sami).  
+Repository: https://github.com/Saminsami73/als-subzero  
+License: MIT
+
+---
+
+## 1. System Design
+
+ALS SubZero stores files in transit across network cables rather than saving them on physical storage media. It brings the acoustic mercury delay-line concept from early computers (EDSAC 1949, UNIVAC 1953) to modern IP networks.
+
+Total in-flight capacity is governed by the Bandwidth-Delay Product (BDP):
+
+$$\text{Capacity} = \text{Bandwidth} \times \text{RTT}$$
+
+For instance, a 1 Gbps connection with 40 ms RTT holds about 5.0 MB in flight.
+
+---
+
+## 2. ALS1 Frame Format
+
+Every frame has a 24-byte header packed in Big Endian:
+
+| Offset | Type | Field | Description |
+|---|---|---|---|
+| 0..3 | char[4] | Magic | ASCII `ALS1` (`0x41 0x4C 0x53 0x31`) |
+| 4..5 | uint16 | Inode ID | Virtual filesystem inode index |
+| 6..7 | uint16 | Chunk Index | Block offset within the file |
+| 8 | uint8 | FEC Group | Stripe group identifier |
+| 9 | uint8 | Chunk in Group | Stripe position (0..K-1 data, K..K+M-1 parity) |
+| 10 | uint8 | Flags | Bitmask (0x01 parity, 0x02 last chunk, 0x04 reconstructed) |
+| 11 | uint8 | Reserved | Zero padding |
+| 12..13 | uint16 | Sequence Number | Increments on every reflection hop |
+| 14..15 | uint16 | Payload Length | Bytes in payload (0..4096) |
+| 16..19 | uint32 | Checksum | Castagnoli CRC32C over header + payload |
+| 20..23 | uint32 | Epoch | Transmission timestamp in microseconds |
+| 24..End | bytes | Payload | Block data or parity bytes |
+
+---
+
+## 3. Cauchy Reed-Solomon Codec
+
+To survive dropped packets, the engine uses Cauchy Reed-Solomon erasure coding over $GF(2^8)$:
+- Irreducible polynomial: $P(x) = x^8 + x^4 + x^3 + x^2 + 1$ ($0\text{x}11\text{D} = 285$)
+- Default ratio: $K=4$ data chunks, $M=2$ parity chunks per stripe
+- Generator matrix: Cauchy layout $a_{i,j} = \frac{1}{x_i \oplus y_j}$
+- Any $K$ surviving chunks out of $K+M$ invert the submatrix via Gauss-Jordan elimination to reconstruct missing data with zero bit errors
+
+---
+
+## 4. Departure Rate Pacer
+
+When round-trip times are small (e.g. sub-millisecond local LAN), re-injecting packets immediately causes packet storms and socket buffer exhaustion (`ENOBUFS`).
+
+The pacer holds packets in a priority queue:
+- Calculates elapsed time: $\Delta t = t_{\text{arrival}} - t_{\text{epoch}}$
+- Schedules departure: $t_{\text{release}} = t_{\text{now}} + (T_{\text{target}} - \Delta t)$
+- Enforces a minimum 100-microsecond gap between consecutive packet releases
+
+---
+
+## 5. Shell Commands
+
+Launch via `python -m als_subzero.cli.main shell`:
+
+```text
+Available Commands:
+  ls [path]               Show files in dir
+  cd [path]               Change dir
+  pwd                     Print current dir
+  cat <path>              Dump file contents from wire
+  write <path> <text>     Write text into in-flight file
+  put <local> [remote]    Push local file into wire
+  get <remote> [local]    Pull in-flight file to disk
+  mkdir <path>            Make directory
+  rm <path>               Delete file
+  stat <path>             Show inode and chunk info
+  tree [path]             Show directory tree
+  status | telemetry      Show live telemetry & RTT
+  bench [loops]           Run loop persistence test
+  serve [port]            Start web UI / REST server (default 8080)
+  exit | quit             Exit shell
+```
+
+---
+
+## 6. Web Dashboard & REST API
+
+Launch via `python -m als_subzero.cli.main serve --port 8080`:
+- Interactive developer console at `http://localhost:8080/`
+- Endpoints: `/api/v1/telemetry`, `/api/v1/fs/tree`, `/api/v1/fs/cat`, `/api/v1/fs/write`, `/api/v1/fs/mkdir`, `/api/v1/fs/rm`
+
+---
+
+## 7. Verification
+
+```bash
+# Unit tests (20 tests, zero external dependencies)
+python tests/run_all.py
+
+# Benchmark under packet loss (0%, 2%, 5%, 10%)
+python scripts/run_benchmark.py
+```

@@ -1,0 +1,51 @@
+# ALS SubZero
+
+> In-flight network delay-line memory filesystem.
+> Built by Samin Sami (ALS stands for "Al Sami", from Samin Yasar AL Sami).
+> Repository: https://github.com/Saminsami73/als-subzero
+> License: MIT
+
+## Summary
+
+ALS SubZero keeps files alive in motion across computer networks instead of writing data to physical SSDs or hard drives. Data chunks circulate as IP packets through remote echo reflectors. When packets stop looping, the files vanish.
+
+## Specs
+
+- Author: Samin Sami
+- Protocol: ALS1 (magic bytes `0x41 0x4C 0x53 0x31`)
+- Header: 24 bytes binary with Castagnoli CRC32C checksum
+- Chunk Size: 4096 bytes
+- Error Correction: Cauchy Reed-Solomon over GF(2^8) (default K=4 data, M=2 parity)
+- Reliability: 100% bit-exact recovery under 10% packet drops
+- Rate Regulation: Microsecond departure pacer preventing socket buffer overflow
+- Transports: UDP reflection, raw ICMP echo requests (RFC 792), simulated network
+- Interfaces: Interactive shell (`subzero:/$`), Python library (`SubZeroEngine`), web dashboard (port 8080)
+
+## Code Map
+
+- `src/als_subzero/core/engine.py`: Primary delay-line engine and background scrubber
+- `src/als_subzero/core/framing.py`: 24-byte ALS1 frame packing with CRC32C
+- `src/als_subzero/core/pacer.py`: Microsecond departure scheduler
+- `src/als_subzero/fec/parity.py`: Cauchy Reed-Solomon codec over GF(2^8)
+- `src/als_subzero/net/transport.py`: UDP, ICMP, and simulated network transports
+- `src/als_subzero/vfs/filesystem.py`: Inode virtual filesystem tree
+- `src/als_subzero/cli/main.py`: Command-line entry points
+- `src/als_subzero/cli/shell.py`: Interactive shell with 15 commands
+- `src/als_subzero/api/server.py`: Localhost web console and REST API
+- `src/c/als_subzero.c`: Native C implementation for Linux
+
+## Verification Commands
+
+```bash
+# Run unit tests (20 tests, zero pip dependencies)
+python tests/run_all.py
+
+# Run packet loss recovery benchmark
+python scripts/run_benchmark.py
+
+# Start interactive shell
+python -m als_subzero.cli.main shell
+
+# Start web UI dashboard
+python -m als_subzero.cli.main serve --port 8080
+```

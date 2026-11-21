@@ -1,0 +1,16 @@
+# ALS SubZero Reflector Target List
+# Developed by Samin Sami (ALS = Al Sami).
+# Each entry is probed during startup. Only hosts with verified 100% echo responsiveness are used.
+127.0.0.1
+1.1.1.1
+1.0.0.1
+8.8.8.8
+8.8.4.4
+9.9.9.9
+149.112.112.112
+208.67.222.222
+208.67.220.220
+# IPv6 targets (if IPv6 routing is available)
+2606:4700:4700::1111
+2001:4860:4860::8888
+
