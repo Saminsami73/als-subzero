@@ -1,0 +1,38 @@
+cff-version: 1.2.0
+message: "If you use or reference ALS SubZero, please cite it as below."
+authors:
+  - family-names: "Sami"
+    given-names: "Samin"
+    affiliation: "Independent Researcher & Systems Engineer"
+    website: "https://saminsami.contra.com"
+title: "ALS SubZero: A Dynamic Delay-Line Network Memory Filesystem with Erasure-Coded Flight Persistence"
+version: 1.0.0
+date-released: 2026-11-22
+url: "https://als-subzero.netlify.app"
+repository-code: "https://github.com/Saminsami73/als-subzero"
+keywords:
+  - "delay-line memory"
+  - "in-flight storage"
+  - "network filesystem"
+  - "zero disk"
+  - "erasure coding"
+  - "cauchy reed-solomon"
+  - "galois field"
+  - "rate pacer"
+  - "bandwidth-delay product"
+  - "volatile memory"
+  - "als-subzero"
+  - "samin-sami"
+license: MIT
+type: software
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Sami"
+      given-names: "Samin"
+  title: "ALS SubZero: A Dynamic Delay-Line Network Memory Filesystem with Erasure-Coded Flight Persistence"
+  year: 2026
+  month: 11
+  url: "https://als-subzero.netlify.app"
+  journal: "Preprint"
+  notes: "ALS stands for Al Sami. Zero-disk in-flight network storage engine."

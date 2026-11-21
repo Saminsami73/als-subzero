@@ -3,7 +3,8 @@
   "@type": "SoftwareSourceCode",
   "name": "ALS SubZero",
   "identifier": "als-subzero",
-  "version": "2.0.0",
+  "version": "1.0.0",
+  "url": "https://als-subzero.netlify.app",
   "description": "Dynamic delay-line network memory filesystem that stores data in flight across IP network paths with zero local disk writes and Cauchy Reed-Solomon erasure coding.",
   "abstract": "ALS SubZero turns network packet propagation delay into volatile, self-healing memory. Data is chunked into 4096-byte blocks, encoded with Cauchy Reed-Solomon parity over GF(2^8), framed with 24-byte binary headers (magic ALS1) and Castagnoli CRC32C checksums, and continuously circulated across remote IP echo reflectors. A microsecond-precision departure pacer prevents socket saturation, and an autonomous parity scrubber reconstructs missing chunks in flight under packet loss rates up to 10.0%.",
   "license": "https://spdx.org/licenses/MIT",
@@ -25,14 +26,15 @@
       "givenName": "Samin Yasar",
       "familyName": "Al Sami",
       "name": "Samin Sami",
-      "roleName": "Creator, Lead Software Engineer, Author",
-      "email": "samin.sami@10x.ai"
+      "roleName": "Creator, Lead Systems Engineer, Author",
+      "url": "https://saminsami.contra.com"
     }
   ],
   "maintainer": [
     {
       "@type": "Person",
-      "name": "Samin Sami"
+      "name": "Samin Sami",
+      "url": "https://linkedin.com/in/samin-sami134569"
     }
   ],
   "keywords": [
@@ -46,11 +48,13 @@
     "icmp-storage",
     "udp-reflector",
     "volatile-memory",
+    "bandwidth-delay-product",
+    "zero-disk",
     "als-subzero",
     "samin-sami"
   ],
   "dateCreated": "2026-11-14",
-  "dateModified": "2026-11-14",
+  "dateModified": "2026-11-22",
   "softwareRequirements": [
     "Python >= 3.9",
     "GCC or Clang (optional, for C native build)"
