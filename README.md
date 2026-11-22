@@ -58,7 +58,7 @@ Here is an honest breakdown of what the project does and what it cannot do:
 
 ### What the system does not do
 - **Not a replacement for real storage:** This is an experiment, not a replacement for SSDs, databases, or local RAM. The client still needs basic host RAM to run Python, manage sockets, and do matrix math.
-- **Strictly volatile:** If the network drops or you stop the process, your files are gone.
+- **Strictly volatile:** If the network drops or you stop the process, your files are bye bye.
 - **High latency:** Reading data takes a full network round trip (10 to 80 ms), which is far slower than local RAM or NVMe drives.
 - **Bandwidth overhead:** Adding 2 parity chunks to every 4 data chunks adds 50% bandwidth overhead (6 / 4 = 1.5x).
 - **Limited capacity:** Total storage is strictly capped by network speed and latency ($C = \text{Bandwidth} \times \text{RTT}$).
