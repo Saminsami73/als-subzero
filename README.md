@@ -553,6 +553,10 @@ Now comes the big serious dude on the field. The official scientific paper detai
 - **Research Paper PDF**: [ALS_SubZero_Research_Paper.pdf](ALS_SubZero_Research_Paper.pdf)
 - **Handwritten Calculations PDF**: [ALS_SubZero_Complete_Handwritten_Math_Calculations.pdf](ALS_SubZero_Complete_Handwritten_Math_Calculations.pdf)
 
+## Final Note
+
+Okay in all seriousness, I structured this README.md and formatted it in a Goofy tone so that the heavy tech jargons and words don't feel intimidating or unknown to less/non-tech users. But "Why waste your time and put your effort in a project that maybe no one will consider using in their every day life?"......... Well, Wright brothers didn't build their first ever plane with 2 massive jet engines, the first ever computer wasn't a Macbook, the first ever car wasn't a Lamborghini. Nature adapts but tech's evolve, what may now be seen as something that is highly incapable for daily usage could be something that replaces hosting providers or cloud servers or drives or turned into a new storage concept in the near future. But that's a very big "Maybe" to gamble your hopes into. Maybe in the near future this particular niche could get more attention and upgrades, or maybe it gets completely ignored and become non existent, but the only thing I can say is this project isn't built to replace anything, it was built because mathematics and concepts of engineering could. Something that very few Devs or Engineers ever look into. It's not a symbol of revolution or a new discovery, it's a symbol of capability we thought wasn't possible.
+
 ### Citation (BibTeX)
 
 ```bibtex
