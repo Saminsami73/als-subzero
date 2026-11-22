@@ -89,7 +89,7 @@ I included three interactive HTML diagrams (click them and you will see individu
 ### 1. Delay-Line Computing Heritage
 
 <div align="center">
-  <img src="assets/history.png" alt="History Behind ALS SubZero" width="920"/>
+  <img src="assets/history.jpg" alt="History Behind ALS SubZero" width="920"/>
 </div>
 
 Early computers like EDSAC (1949) used acoustic mercury delay lines for memory (Yep, the black liquid devil that could get you killed if one drop entered in your bloodstream). They turned electrical signals into sound pulses traveling through tubes of liquid mercury, picked them up at the other end with a quartz crystal, amplified them, and sent them back through (talk about getting a free 5 star service from Nature itself).
