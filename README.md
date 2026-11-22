@@ -28,37 +28,37 @@ SPDX-License-Identifier: MIT
 
 </div>
 
-> 🌐 **Live Website:** [https://als-subzero.netlify.app](https://als-subzero.netlify.app) -- Interactive vector diagrams, 21 handwritten math proof sheets, benchmark charts, and research paper previews.
+> 🌐 **Live Website:** [https://als-subzero.netlify.app](https://als-subzero.netlify.app) -- Interactive vector diagrams, 21 handwritten math proof sheets, benchmark charts, and research paper previews. Yep all in there bro!
 
 ---
 
 ## Summary
 
-**ALS SubZero** is a project that stores files inside network cables while in flight. Instead of saving data to a disk or SSD, it keeps packets bouncing continuously between network reflectors.
+**ALS SubZero** is a project that stores files inside network cables while in flight (imagine First-Class Emirates air ticket). Instead of saving data to a disk or SSD, it keeps packets bouncing continuously between network reflectors (A poor kid without a home taking temporary shelter in different places).
 
-ALS stands for "Al Sami", from my name: **Samin Yasar AL Sami**. Reason for this name is because my stupid brain couldn't come up with a proper one.
+ALS came from my name: **Samin Yasar "AL S"ami**. The reason for this lame-ass name is because my stupid brain couldn't come up with a proper one after all the calculations.
 
-When you write a file, the engine splits it into 4096-byte blocks, adds Cauchy Reed-Solomon parity, and sends the packets out over UDP or ICMP echo. When packets return, the engine checks their CRC32C checksums, repairs any dropped chunks, spaces out outgoing packets so network buffers do not choke, and sends them right back out without a hug or a proper goodbye.
+When you write a file, the engine (broom broom!) splits it into 4096-byte blocks, adds Cauchy Reed-Solomon (a big brain guy) parity, and sends the packets out over UDP or ICMP echo. When packets return for a welcome party, the engine checks their CRC32C checksums (their Passport), repairs any dropped chunks (free medical care), spaces out outgoing packets so network buffers do not choke, and sends them right back out without a big hug or a proper Goodbye.
 
-The client runs locally in Python (or C on Linux) and keeps sockets and folder paths in memory. The actual file data lives in the wire. If the circulation stops, the data disappears like Abracadabra!
+The client runs locally in Python (or C on Linux) and keeps sockets and folder paths in memory. The actual file data lives in the wire (yep, the cables!). If the circulation stops, the data disappears like Abracadabra! Like it suffers an heart attack or something....
 
 ---
 
 ## Capabilities and Practical Limitations
 
-Here is an honest breakdown of what the project does and what it cannot do:
+Here is a complete honest from heart breakdown of what the project does and what it cannot do:
 
-### What the system does
-- **Zero local disk writes:** Data never touches an SSD, hard drive, or USB drive while circulating (0.0 MB/s disk I/O).
-- **Packet loss repair:** Uses $(4, 2)$ Cauchy Reed-Solomon over $GF(2^8)$. Any 4 chunks out of 6 reconstruct the full stripe, handling up to 33.3% chunk loss.
+### What the awesome system does:
+- **Zero local disk writes:** Data never touches an SSD, hard drive, or USB drive while circulating (0.0 MB/s disk I/O). Touch =  Jail without early parole!
+- **Packet loss repair:** Uses $(4, 2)$ Cauchy Reed-Solomon over $GF(2^8)$. Any 4 chunks out of 6 reconstruct the full stripe, handling up to 33.3% chunk loss (so don't panic yeah?).
 - **Departure rate pacing:** Spaces outgoing packets (default 100 microseconds spacing) so operating system socket buffers do not overflow.
-- **CRC32C verification:** Uses Castagnoli CRC32C to detect corrupted or truncated frames before processing them.
+- **CRC32C verification:** Uses Castagnoli CRC32C to detect corrupted or truncated frames before processing them (License and Registration please).
 - **Interactive tools:** Comes with a terminal shell, localhost endpoints, and a web dashboard on port 8080. Go crazy with it!
 - **Zero dependencies:** Core Python engine runs on Python 3.9+ using only standard library modules. 
 
-### What the system does not do
-- **Not a replacement for real storage:** This is an experiment, not a replacement for SSDs, databases, or local RAM. The client still needs basic host RAM to run Python, manage sockets, and do matrix math.
-- **Strictly volatile:** If the network drops or you stop the process, your files are bye bye.
+### What the system says "NO NO" to:
+- **Not a replacement for real storage:** This is an experiment, not a replacement for SSDs, databases, or local RAM. The client still needs basic host RAM to run Python, manage sockets, and do matrix math (Yikes!).
+- **Strictly volatile:** If the network drops or you stop the process, your files are bye bye. This baby is very sensitive.
 - **High latency:** Reading data takes a full network round trip (10 to 80 ms), which is far slower (ofcourse, duh!) than local RAM or NVMe drives.
 - **Bandwidth overhead:** Adding 2 parity chunks to every 4 data chunks adds 50% bandwidth overhead (6 / 4 = 1.5x).
 - **Limited capacity:** Total storage is strictly capped by network speed and latency ($C = \text{Bandwidth} \times \text{RTT}$).
@@ -76,7 +76,7 @@ Here is an honest breakdown of what the project does and what it cannot do:
 
 ## Interactive Architecture Diagrams
 
-I included three interactive HTML diagrams in the `diagrams/` folder that open in any browser:
+I included three interactive HTML diagrams (click them and you will see individual section in details) in the `diagrams/` folder that open in any browser (don't embarass this github repo by opening it on Microsoft EDGE btw!!!):
 
 1. [Architecture Diagram](diagrams/architecture.html): Client layer, VFS, Galois field math, queue pacer, and reflector loop.
 2. [Data-Flow Diagram](diagrams/dataflow.html): Packet write path from user input to network reflection and back.
@@ -88,11 +88,11 @@ I included three interactive HTML diagrams in the `diagrams/` folder that open i
 
 ### 1. Delay-Line Computing Heritage
 
-Early computers like EDSAC (1949) used acoustic mercury delay lines for memory. They turned electrical signals into sound pulses traveling through tubes of liquid mercury, picked them up at the other end with a quartz crystal, amplified them, and sent them back through.
+Early computers like EDSAC (1949) used acoustic mercury delay lines for memory (Yep, the black liquid devil that could get you killed if one drop entered in your bloodstream). They turned electrical signals into sound pulses traveling through tubes of liquid mercury, picked them up at the other end with a quartz crystal, amplified them, and sent them back through (talk about getting a free 5 star service from Nature itself).
 
-Fiber optic cables work similarly. Light takes time to travel through glass, and packets take time to hop across routers.
+Fiber optic cables work similarly (the cables stuck on the ass of your WiFi). Light takes time to travel through glass, and packets take time to hop across routers without any Visa.
 
-Earlier experiments like pingfs showed you could bounce raw bytes using ICMP echo. But they broke if a single packet dropped, and fast networks quickly overflowed socket buffers. ALS SubZero fixes those two issues with Cauchy Reed-Solomon error correction and microsecond rate pacing.
+Earlier experiments like pingfs (a massive shout-out to pingfs btw) showed you could bounce raw bytes using ICMP echo. But they broke if a single packet dropped, and fast networks quickly overflowed socket buffers. ALS SubZero finally fixes those two issues with Cauchy Reed-Solomon error correction and microsecond rate pacing.
 
 ### 2. Bandwidth-Delay Product (BDP) Capacity
 
@@ -113,13 +113,13 @@ $$\text{Capacity} = \text{Bandwidth} \times \text{RTT}$$
 | **Transcontinental Internet** | 1.0 Gbps | 40.0 ms | 40,000,000 b | 5,000,000 B | 1,213 frames |
 | **Transatlantic Data Center** | 10.0 Gbps | 80.0 ms | 800,000,000 b | 100,000,000 B | 24,271 frames |
 
-On a 1 Gbps connection with 40 ms RTT, roughly 1,213 frames (4096-byte payload + 24-byte header = 4120 bytes) circulate in flight simultaneously.
+On a 1 Gbps connection with 40 ms RTT, roughly 1,213 frames (4096-byte payload + 24-byte header = 4120 bytes) circulate in flight simultaneously without any Petrol or Gas.
 
 ---
 
 ## Handwritten Mathematical Proofs (8 Problems)
 
-I worked out the Galois field tables, Cauchy matrices, Gauss-Jordan inversion, and CRC32C proofs by hand on paper before writing any code. Yes, yes I know my handwriting is Doctor Certified and scan copies are 4K quality resolution, so if anyone needs a better explanation to these problems or a step by step guidance (if your eyes starts to hurt), hit me up! All 21 scanned pages are compiled in this PDF:
+I worked out the Galois field tables, Cauchy matrices, Gauss-Jordan inversion, and CRC32C proofs by hand on paper before writing any code (because I am a LEGEND). Yes, yes I know my handwriting is Elite level Doctor-Certified and scan copies came out with an absolute 4K ultra quality pro max resolution, so if anyone needs a better explanation to these problems or a step by step guidance (if your eyes starts to hurt, mine did in the first 5 minutes), hit me up! All 21 scanned pages are compiled in this PDF:
 
 **[Download Complete 21-Page Handwritten Calculations (PDF)](ALS_SubZero_Complete_Handwritten_Math_Calculations.pdf)**
 
@@ -139,7 +139,7 @@ $$C = B \times RTT$$
 - **1 Gbps / 40 ms RTT:** $1{,}000{,}000{,}000 \times 0.040 / 8 = 5{,}000{,}000\text{ bytes} \approx 5.0\text{ MB}$.
 - **Frame count:** With a 4,096-byte payload and a 24-byte header (4,120 bytes total per frame), a 1 Gbps / 40 ms link holds:
 $$N = \left\lfloor \frac{5{,}000{,}000}{4{,}120} \right\rfloor = 1{,}213\text{ frames}$$
-- **Header check:** In my first draft, I forgot the 24-byte header and got 1,220 frames, which overestimated capacity by 28 KB. The engine accounts for the full 4,120-byte frame (`src/als_subzero/core/engine.py`).
+- **Header check:** In my first draft, I forgot the 24-byte header (because I am DUMB) and got 1,220 frames, which overestimated capacity by 28 KB. The engine accounts for the full 4,120-byte frame (`src/als_subzero/core/engine.py`).
 
 <div align="center">
   <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0001.png" width="48%"/>
@@ -214,7 +214,7 @@ $$a^{-1} = \frac{1}{a} = \text{EXP}[255 - \text{LOG}[a]]$$
 
 ### Problem 5: Cauchy Generator Matrix ($K=4, M=2$)
 
-Cauchy matrices guarantee that every square submatrix is invertible.
+Cauchy matrices guarantee that every square submatrix is invertible (This dude is very strict).
 
 - Disjoint index sets: $X = \{0, 1\}$ (parity), $Y = \{2, 3, 4, 5\}$ (data).
 - Matrix entries: $a_{i,j} = \frac{1}{x_i \oplus y_j}$:
@@ -258,7 +258,7 @@ $$\mathbf{P_1 = 15 \ (0\text{x}0\text{F})}$$
 
 ---
 
-### Problem 7: Erasure Recovery via Gauss-Jordan Inversion
+### Problem 7: Erasure Recovery via Gauss-Jordan Inversion (Wolverine or Deadpool regen superpower!)
 
 - **Drop scenario:** Suppose the network drops $D_1$ (105) and $D_3$ (210).
 - **Surviving chunks:** $D_0=42, D_2=77, P_0=92, P_1=15$ at rows $\{0, 2, 4, 5\}$ of generator $G$.
@@ -331,7 +331,7 @@ t_release = t_now + max(0, T_target - (t_now - t_epoch))
 
 <div align="center">
   <img src="assets/recovery_pipeline.png" alt="In-Flight Self-Healing Lifecycle" width="920"/>
-  <p><em>Figure 2: Self-healing lifecycle: Ingress Capture, Stripe Assembly, Loss Detection, Cauchy Inversion, and Paced Re-Injection.</em></p>
+  <p><em>Figure 2: Self-healing lifecycle: Ingress Capture, Stripe Assembly, Loss Detection, Cauchy Inversion, and Paced Re-Injection. It's ACTUALLY DEADPOOL!!!!!!</em></p>
 </div>
 
 ---
@@ -376,13 +376,13 @@ I benchmarked ALS SubZero by circulating 16,384 bytes of data across 60 network 
 | **5.0%** | 16,384 B | 1.91 s | 1,476 / 1,386 | 78 | 100% Bit-Exact | **PASS** |
 | **10.0%** | 16,384 B | 2.12 s | 1,481 / 1,307 | 151 | 100% Bit-Exact | **PASS** |
 
-Even when 151 packets were dropped by the network, the background scrubber rebuilt every missing byte in flight. The recovered file matched the original input byte for byte.
+Even when 151 packets were dropped by the network, the background scrubber rebuilt every missing byte in flight. The recovered file matched the original input byte for byte. Not gonna lie, I felt I was Newton for a whole minute before realising I was too much of an idiot to even play with an apple, let alone gravity.
 
 ---
 
 ## Project Repository Layout
 
-This is the exact file layout of the repository:
+File layout of the LEGENDARY repo:
 
 ```text
 .
@@ -412,8 +412,8 @@ This is the exact file layout of the repository:
 │   ├── hero_poster.jpg
 │   ├── localhost-ui.png
 │   ├── recovery_pipeline.png
-│   └── samin-sami.jpg         # Author & lead systems engineer photo
-├── diagrams/                  # Standalone interactive HTML diagrams
+│   └── samin-sami.jpg         # My handsome photo
+├── diagrams/                  # Interactive HTML diagrams
 │   ├── architecture.html      # System architecture
 │   ├── dataflow.html          # In-flight dataflow
 │   └── sequence.html          # Self-healing read/write sequence
@@ -421,8 +421,8 @@ This is the exact file layout of the repository:
 ├── scripts/
 │   ├── package_release.py     # Clean release packager
 │   ├── run_benchmark.py       # Automated packet loss resilience benchmark
-│   └── run_demo.py            # Live visual terminal demonstration
-├── tests/                     # Test suite (20 tests, zero external dependencies)
+│   └── run_demo.py            # Live visual terminal demonstration (to get the grasp of what this project does)
+├── tests/                     # Tests (20 tests, zero external dependencies, stuffs for senior Devs and Engineers)
 │   ├── run_all.py             # Test runner
 │   ├── test_fec.py            # GF(2^8) arithmetic and Cauchy matrix tests
 │   ├── test_flight_persistence.py # Multi-cycle in-flight persistence
@@ -430,7 +430,7 @@ This is the exact file layout of the repository:
 │   ├── test_pacer.py          # Departure queue rate pacer tests
 │   └── test_vfs.py            # POSIX filesystem operations
 ├── ALS_SubZero_Complete_Handwritten_Math_Calculations.pdf # 21-page handwritten math notebook
-├── ALS_SubZero_Research_Paper.pdf # Complete scientific research paper
+├── ALS_SubZero_Research_Paper.pdf # Complete scientific research paper (This one's serious, no funny stuff here)
 ├── ARCHITECTURE.md            # Technical architecture and theory
 ├── codemeta.json              # Software metadata (Schema.org / CodeMeta 2.0)
 ├── hosts.example              # Example reflector endpoints
@@ -456,25 +456,25 @@ This is the exact file layout of the repository:
 ```bash
 python tests/run_all.py
 ```
-Runs all 20 test cases covering framing, CRC32C, Cauchy FEC math, pacer scheduling, and VFS operations in under 1 second.
+Runs all 20 test cases covering framing, CRC32C, Cauchy FEC math, pacer scheduling, and VFS operations in under 1 second. Speed level : Elon Musk Pro Max.
 
 ### 2. Run the Packet Loss Benchmark
 ```bash
 python scripts/run_benchmark.py
 ```
-Tests 0%, 2%, 5%, and 10% simulated packet loss with automated verification.
+Tests 0%, 2%, 5%, and 10% packet loss with automated verification. Yes it does, just paste it and see the chigi chigi magic!
 
 ### 3. Run the Live Demonstration
 ```bash
 python scripts/run_demo.py
 ```
-Injects files into flight, runs circulation cycles, and verifies 100% bit-exact recovery.
+Injects files into flight, runs circulation cycles, and verifies 100% bit-exact recovery. A runnable demo of this whole project just so you guys have a better understanding of ALS SubZero.
 
 ### 4. Launch the Interactive Shell
 ```bash
 python -m als_subzero.cli.main shell
 ```
-Opens the terminal shell to browse directories, write and read files from the wire, inspect chunk metadata, and launch the web UI.
+Opens the terminal shell to browse directories, write and read files from the wire, inspect chunk metadata, and launch the web UI. Fiddle with it until your keyboards break and let me know your feedback guys!
 
 ---
 
@@ -482,7 +482,7 @@ Opens the terminal shell to browse directories, write and read files from the wi
 
 <div align="center">
   <img src="assets/cli.png" alt="ALS SubZero Interactive Terminal Shell" width="920"/>
-  <p><em>Figure 5: Interactive terminal shell running in-flight commands and live telemetry.</em></p>
+  <p><em>Figure 5: Interactive terminal shell running in-flight commands and live telemetry. Very serious stuff. </em></p>
 </div>
 
 Launch the shell with `python -m als_subzero.cli.main shell`. Type `help` to view available commands:
@@ -514,14 +514,14 @@ Available Commands:
 - **Upload local file:** `put ./sample.bin /data/sample.bin`
 - **Download back to disk:** `get /data/sample.bin ./recovered.bin`
 - **Run persistence test:** `bench 100` (circulates 2048 bytes across 100 round trips and verifies byte exactness)
-- **Start web dashboard:** `serve 8080` (starts web console on port 8080 in a background thread)
+- **Start web dashboard:** `serve 8080` (starts web console on port 8080)
 - **Show live telemetry:** `status`
 
 ---
 
 ## Web Dashboard & REST Control Console
 
-> 🌐 **Live Website:** [https://als-subzero.netlify.app](https://als-subzero.netlify.app) -- Interactive web demo, handwritten math gallery, and vector diagrams.
+> 🌐 **Live Website:** [https://als-subzero.netlify.app](https://als-subzero.netlify.app) -- Interactive web demo, handwritten math gallery, and vector diagrams. Simple yet premium landing page telling you more awesome stuff about ALS SubZero.
 
 <div align="center">
   <img src="assets/localhost-ui.png" alt="ALS SubZero Localhost Web Console" width="920"/>
@@ -538,18 +538,18 @@ Open `http://localhost:8080/` in your browser. The dashboard polls the engine ev
 - `GET /api/v1/telemetry`: JSON metrics (bytes in flight, chunk counts, packet counts, RTT, pacer queue, FEC healed).
 - `GET /api/v1/fs/tree?path=/`: ASCII directory tree of the virtual filesystem.
 - `GET /api/v1/fs/cat?path=<path>`: Binary or text content of an in-flight file.
-- `POST /api/v1/fs/write?path=<path>`: Write body payload into network delay-line memory.
-- `POST /api/v1/fs/mkdir?path=<path>`: Create a directory in the virtual filesystem.
-- `DELETE /api/v1/fs/rm?path=<path>`: Delete a file from flight memory.
+- `POST /api/v1/fs/write?path=<path>`: Write body payload into network delay-line memory. Don't be shy now!
+- `POST /api/v1/fs/mkdir?path=<path>`: Create a directory in the virtual filesystem. Din't forget to wish it a Happy Birthday!!
+- `DELETE /api/v1/fs/rm?path=<path>`: Delete and bye bye a file from flight memory.
 
 ---
 
 ## Scientific Paper
 
-The scientific paper detailing the theoretical math, Galois field proofs, and benchmark data is included in the repository:
+Now comes the big serious dude on the field. The official scientific paper detailing the theoretical math, Galois field proofs, and benchmark data is included in the repository:
 
-- **Paper Title**: *ALS SubZero: A Dynamic Delay-Line Network Memory Filesystem with Erasure-Coded Flight Persistence*
-- **Author**: Samin Sami
+- **Paper Title**: *ALS SubZero: A Dynamic Delay-Line Network Memory Filesystem with Erasure-Coded Flight Persistence* (Very Tony Stark title)
+- **Author**: Samin Sami (The dumbass behind this crazy repo)
 - **Research Paper PDF**: [ALS_SubZero_Research_Paper.pdf](ALS_SubZero_Research_Paper.pdf)
 - **Handwritten Calculations PDF**: [ALS_SubZero_Complete_Handwritten_Math_Calculations.pdf](ALS_SubZero_Complete_Handwritten_Math_Calculations.pdf)
 
