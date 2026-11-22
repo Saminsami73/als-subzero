@@ -108,7 +108,7 @@ I solved the Galois field tables, Cauchy generator matrices, Gauss-Jordan invers
 **[Download Complete 21-Page Handwritten Calculations (PDF)](ALS_SubZero_Complete_Handwritten_Math_Calculations.pdf)**
 
 <div align="center">
-  <img src="math_handwritten/Screenshot 2026-11-22 012631.png" alt="Handwritten Mathematical Calculations Cover Page" width="560"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0000.png" alt="Handwritten Mathematical Calculations Cover Page" width="560"/>
   <p><em>Notebook Cover: 8 mathematical problems solved by hand for ALS SubZero.</em></p>
 </div>
 
@@ -126,8 +126,8 @@ $$N = \left\lfloor \frac{5{,}000{,}000}{4{,}120} \right\rfloor = 1{,}213\text{ f
 - **Notebook check:** In my initial draft, omitting the 24-byte header gave $1{,}220.7$ frames, overpromising link budget by 28,672 bytes. The engine strictly accounts for the full 4,120-byte frame (`src/als_subzero/core/engine.py`).
 
 <div align="center">
-  <img src="math_handwritten/Screenshot 2026-11-22 012705.png" width="48%"/>
-  <img src="math_handwritten/Screenshot 2026-11-22 012728.png" width="48%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0001.png" width="48%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0002.png" width="48%"/>
   <p><em>Problem 1: BDP capacity calculations and frame count derivations.</em></p>
 </div>
 
@@ -139,6 +139,7 @@ To do error correction on single bytes without rounding or overflow, all arithme
 $$P(x) = x^8 + x^4 + x^3 + x^2 + 1 = 100011101_2 = 285 \ (0\text{x}11\text{D})$$
 
 Starting with $\alpha = 2$, each step shifts left by 1 bit. If the value reaches 256 or higher (bit 8 set), XOR with 285:
+
 - **Power 8:** $128 \times 2 = 256 \ge 256 \implies 256 \oplus 285 = 29 \ (0\text{x}1\text{D})$. So $\text{EXP}[8] = 29$, $\text{LOG}[29] = 8$.
 - **Power 12:** $232 \times 2 = 464 \ge 256 \implies 464 \oplus 285 = 205 \ (0\text{xCD})$. So $\text{EXP}[12] = 205$, $\text{LOG}[205] = 12$.
 
@@ -149,10 +150,10 @@ assert GF_EXP[:13] == [1, 2, 4, 8, 16, 32, 64, 128, 29, 58, 116, 232, 205]
 ```
 
 <div align="center">
-  <img src="math_handwritten/Screenshot 2026-11-22 012803.png" width="24%"/>
-  <img src="math_handwritten/Screenshot 2026-11-22 012837.png" width="24%"/>
-  <img src="math_handwritten/Screenshot 2026-11-22 012851.png" width="24%"/>
-  <img src="math_handwritten/Screenshot 2026-11-22 012904.png" width="24%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0003.png" width="24%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0004.png" width="24%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0005.png" width="24%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0006.png" width="24%"/>
   <p><em>Problem 2: Bit shifts, polynomial reductions, and table generation.</em></p>
 </div>
 
@@ -172,8 +173,8 @@ Multiply $0\text{x}8\text{E}$ (142) by $0\text{x}2\text{A}$ (42):
 > Ordinary integer multiplication gives $142 \times 42 = 5{,}964$, which overflows a single byte. Finite field log tables guarantee every product fits in 1 byte.
 
 <div align="center">
-  <img src="math_handwritten/Screenshot 2026-11-22 012923.png" width="48%"/>
-  <img src="math_handwritten/Screenshot 2026-11-22 012934.png" width="48%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0007.png" width="48%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0008.png" width="48%"/>
   <p><em>Problem 3: Log-table multiplication and modulo wrap logic.</em></p>
 </div>
 
@@ -190,7 +191,7 @@ $$a^{-1} = \frac{1}{a} = \text{EXP}[255 - \text{LOG}[a]]$$
   - $1/5$: $\text{LOG}[5] = 50 \implies 255 - 50 = 205 \implies \text{EXP}[205] = 167 \ (0\text{xA}7)$. Check: $167 \times 5 = 1$.
 
 <div align="center">
-  <img src="math_handwritten/Screenshot 2026-11-22 012944.png" width="48%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0009.png" width="48%"/>
   <p><em>Problem 4: Multiplicative inverses and log lookup verification.</em></p>
 </div>
 
@@ -208,7 +209,7 @@ A Cauchy matrix over $GF(2^8)$ guarantees that every square submatrix is inverti
 $$A = \begin{bmatrix} 142 & 244 & 71 & 167 \\ 244 & 142 & 167 & 71 \end{bmatrix}_{10} = \begin{bmatrix} 0\text{x}8\text{E} & 0\text{xF}4 & 0\text{x}47 & 0\text{xA}7 \\ 0\text{xF}4 & 0\text{x}8\text{E} & 0\text{xA}7 & 0\text{x}47 \end{bmatrix}_{16}$$
 
 <div align="center">
-  <img src="math_handwritten/Screenshot 2026-11-22 012954.png" width="48%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0010.png" width="48%"/>
   <p><em>Problem 5: Cauchy matrix construction and column swapping symmetry.</em></p>
 </div>
 
@@ -222,6 +223,7 @@ $$D = [D_0, D_1, D_2, D_3] = [42, 105, 77, 210] = [0\text{x}2\text{A}, 0\text{x}
 #### Calculating Parity $P_0$ (Row 0 of $A$)
 
 $$P_0 = (142 \otimes 42) \oplus (244 \otimes 105) \oplus (71 \otimes 77) \oplus (167 \otimes 210)$$
+
 - Terms via log tables: $21 \oplus 39 \oplus 84 \oplus 58$.
 - XOR cascade: $21 \oplus 39 = 50 \implies 50 \oplus 84 = 102 \implies 102 \oplus 58 = 92 \ (0\text{x}5\text{C})$.
 $$\mathbf{P_0 = 92 \ (0\text{x}5\text{C})}$$
@@ -229,14 +231,15 @@ $$\mathbf{P_0 = 92 \ (0\text{x}5\text{C})}$$
 #### Calculating Parity $P_1$ (Row 1 of $A$)
 
 $$P_1 = (244 \otimes 42) \oplus (142 \otimes 105) \oplus (167 \otimes 77) \oplus (71 \otimes 210)$$
+
 - Terms: $237 \oplus 186 \oplus 226 \oplus 186$.
 - XOR cascade: $237 \oplus 186 = 87 \implies 87 \oplus 226 = 181 \implies 181 \oplus 186 = 15 \ (0\text{x}0\text{F})$.
 $$\mathbf{P_1 = 15 \ (0\text{x}0\text{F})}$$
 
 <div align="center">
-  <img src="math_handwritten/Screenshot 2026-11-22 013005.png" width="32%"/>
-  <img src="math_handwritten/Screenshot 2026-11-22 013015.png" width="32%"/>
-  <img src="math_handwritten/Screenshot 2026-11-22 013023.png" width="32%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0011.png" width="32%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0012.png" width="32%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0013.png" width="32%"/>
   <p><em>Problem 6: Calculating parity terms P0 and P1 with bitwise XOR steps.</em></p>
 </div>
 
@@ -269,13 +272,13 @@ $$D_3 = (1 \otimes 42) \oplus (123 \otimes 77) \oplus (10 \otimes 92) \oplus (12
 Both bytes match the original values with zero bit errors.
 
 <div align="center">
-  <img src="math_handwritten/Screenshot 2026-11-22 013037.png" width="32%"/>
-  <img src="math_handwritten/Screenshot 2026-11-22 013047.png" width="32%"/>
-  <img src="math_handwritten/Screenshot 2026-11-22 013054.png" width="32%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0014.png" width="32%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0015.png" width="32%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0016.png" width="32%"/>
 </div>
 <div align="center">
-  <img src="math_handwritten/Screenshot 2026-11-22 013105.png" width="48%"/>
-  <img src="math_handwritten/Screenshot 2026-11-22 013113.png" width="48%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0017.png" width="48%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0018.png" width="48%"/>
   <p><em>Problem 7: Submatrix inversion, row-swapping pivot fix, and bit-exact recovery.</em></p>
 </div>
 
@@ -292,8 +295,8 @@ $$G(x) = x^{32} + x^{28} + x^{27} + \dots + 1 = 0\text{x}1\text{EDC}6\text{F}41$
 * Verified in tests: `python tests/run_all.py` confirms `test_crc_tamper_detection ... ok`.
 
 <div align="center">
-  <img src="math_handwritten/Screenshot 2026-11-22 013122.png" width="48%"/>
-  <img src="math_handwritten/Screenshot 2026-11-22 013131.png" width="48%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0019.png" width="48%"/>
+  <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0020.png" width="48%"/>
   <p><em>Problem 8: Frame header structure, Castagnoli polynomial, and tamper tests.</em></p>
 </div>
 
@@ -401,7 +404,7 @@ This is the exact file layout of the repository:
 │   ├── architecture.html      # System architecture
 │   ├── dataflow.html          # In-flight dataflow
 │   └── sequence.html          # Self-healing read/write sequence
-├── math_handwritten/          # 21 original high-resolution handwritten mathematical scans
+├── ALS_SubZero_Complete_Handwritten_Math_Calculations/ # 21 original high-resolution handwritten mathematical scans
 ├── scripts/
 │   ├── package_release.py     # Clean release packager
 │   ├── run_benchmark.py       # Automated packet loss resilience benchmark
