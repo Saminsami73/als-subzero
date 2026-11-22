@@ -28,19 +28,40 @@ SPDX-License-Identifier: MIT
 
 </div>
 
-> 🌐 **Live Website:** [https://als-subzero.netlify.app](https://als-subzero.netlify.app) — Explore live interactive vector diagrams, 21 handwritten math proof sheets, empirical benchmark charts, and research paper previews.
+> 🌐 **Live Website:** [https://als-subzero.netlify.app](https://als-subzero.netlify.app) -- Interactive vector diagrams, 21 handwritten math proof sheets, benchmark charts, and research paper previews.
 
 ---
 
 ## Summary
 
-I designed and built **ALS SubZero** to store digital files inside network cables while in flight, instead of saving them to solid-state drives, hard disks, or USB drives.
+I built **ALS SubZero** as an experimental delay-line memory filesystem that keeps digital files in flight across network paths, rather than writing them to physical hard disks, solid-state drives, or USB storage.
 
 ALS stands for "Al Sami", taken from the first three letters of my last name: **Samin Yasar AL Sami**.
 
-When you write a file in ALS SubZero, the engine breaks the file into 4096-byte blocks, attaches a 24-byte binary header with a Castagnoli CRC32C checksum, generates Cauchy Reed-Solomon parity blocks, and launches the frames out to remote network reflectors. As packets return, the engine reads them, checks for packet drops, repairs missing blocks mathematically, paces departures, and immediately bounces them back into the wire.
+When you store a file in ALS SubZero, the engine splits the data into 4096-byte chunks, attaches a 24-byte binary header with a Castagnoli CRC32C checksum, calculates Cauchy Reed-Solomon parity chunks, and sends the packets to remote echo reflectors. As packets return, the engine checks for drops, repairs missing chunks through matrix math, paces departure rates to prevent buffer overflow, and circulates them back into the network wire.
 
-If the circulation loop stops, the files disappear. The network path is the storage medium.
+The client process runs in user space (Python standard library, with an optional native C daemon on Linux), using local system memory for OS socket buffers and directory metadata. The data payload persistence depends entirely on continuous network flight: if the packet circulation loop stops, the data is gone.
+
+---
+
+## Capabilities and Practical Limitations
+
+ALS SubZero is an experimental delay-line memory filesystem exploring in-flight networking principles. To provide a clear and realistic assessment, here is what the system does and what it does not do:
+
+### What the system does
+- **Zero local disk writes:** The engine keeps file payloads circulating in network packets without writing blocks to local solid-state drives, hard disks, or USB storage (0.0 MB/s disk I/O).
+- **Parity reconstruction:** Using Cauchy Reed-Solomon (4, 2) over $GF(2^8)$, the engine reconstructs missing chunks as long as at least 4 of the 6 stripe chunks arrive intact (tolerating up to 33.3% loss per stripe).
+- **Rate pacing:** The departure queue regulates packet transmission intervals (default 100 microseconds spacing) to keep socket buffers from overflowing.
+- **Integrity verification:** Castagnoli CRC32C checksums validate incoming frames and reject tampered or truncated data before processing.
+- **Interactive interfaces:** Includes an interactive CLI shell, REST endpoints, and a localhost web UI for observing live packet telemetry and file operations.
+- **Zero external dependencies:** The core Python implementation uses only the Python 3.9+ standard library.
+
+### What the system does not do
+- **Not a replacement for physical storage or system RAM:** ALS SubZero is an experimental prototype. The client process requires standard host RAM to execute Python or C, maintain socket handles, hold the virtual filesystem directory tree, and perform Galois field matrix calculations.
+- **Strictly volatile lifetime:** Data only exists while packets actively circulate through echo reflectors. If the network link drops, reflector nodes stop responding, or the client process terminates, in-flight data is lost.
+- **Network latency trade-off:** Reading a file requires waiting for circulating packets to arrive over the wire (network RTT, typically 10 to 80 ms), which is orders of magnitude slower than physical DRAM (nanoseconds) or NVMe SSDs (microseconds).
+- **Parity bandwidth overhead:** Adding 2 parity chunks for every 4 data chunks introduces a 50% network bandwidth overhead (6 / 4 = 1.5x).
+- **Capacity bounded by physics:** The total storage volume is strictly limited by the Bandwidth-Delay Product (Capacity = Bandwidth * RTT) of the network path and reflector round-trip times.
 
 ---
 
@@ -71,12 +92,9 @@ In the late 1940s, computers like EDSAC (1949) and UNIVAC (1953) used acoustic m
 
 Fiber optic cables have that same delay property. Light traveling through glass takes time. When you send IP packets across routers, they spend measurable flight time in transit.
 
-Earlier projects like pingfs showed that raw bytes could bounce off ICMP reflectors. But they had two big limitations:
+Earlier experimental projects like pingfs demonstrated that raw bytes could bounce off ICMP echo reflectors. However, they had practical limits: losing a single packet corrupted the file, and fast local networks quickly overflowed socket buffers (`ENOBUFS`).
 
-1. **Zero packet drop tolerance**: Losing a single packet permanently broke the file.
-2. **Socket buffer overflow**: On fast local networks with round-trip times under 1 millisecond, packets looped too fast, overflowing socket buffers (`ENOBUFS`) and crashing.
-
-ALS SubZero solves both problems: Cauchy Reed-Solomon erasure coding repairs dropped packets, and a microsecond-precision departure pacer regulates transmission timing.
+ALS SubZero addresses these specific constraints: Cauchy Reed-Solomon erasure coding repairs dropped packets within a stripe, and a departure pacer enforces microsecond transmission spacing to prevent queue overflow.
 
 ### 2. Bandwidth-Delay Product (BDP) Capacity
 
@@ -139,7 +157,6 @@ To do error correction on single bytes without rounding or overflow, all arithme
 $$P(x) = x^8 + x^4 + x^3 + x^2 + 1 = 100011101_2 = 285 \ (0\text{x}11\text{D})$$
 
 Starting with $\alpha = 2$, each step shifts left by 1 bit. If the value reaches 256 or higher (bit 8 set), XOR with 285:
-
 - **Power 8:** $128 \times 2 = 256 \ge 256 \implies 256 \oplus 285 = 29 \ (0\text{x}1\text{D})$. So $\text{EXP}[8] = 29$, $\text{LOG}[29] = 8$.
 - **Power 12:** $232 \times 2 = 464 \ge 256 \implies 464 \oplus 285 = 205 \ (0\text{xCD})$. So $\text{EXP}[12] = 205$, $\text{LOG}[205] = 12$.
 
@@ -223,7 +240,6 @@ $$D = [D_0, D_1, D_2, D_3] = [42, 105, 77, 210] = [0\text{x}2\text{A}, 0\text{x}
 #### Calculating Parity $P_0$ (Row 0 of $A$)
 
 $$P_0 = (142 \otimes 42) \oplus (244 \otimes 105) \oplus (71 \otimes 77) \oplus (167 \otimes 210)$$
-
 - Terms via log tables: $21 \oplus 39 \oplus 84 \oplus 58$.
 - XOR cascade: $21 \oplus 39 = 50 \implies 50 \oplus 84 = 102 \implies 102 \oplus 58 = 92 \ (0\text{x}5\text{C})$.
 $$\mathbf{P_0 = 92 \ (0\text{x}5\text{C})}$$
@@ -231,7 +247,6 @@ $$\mathbf{P_0 = 92 \ (0\text{x}5\text{C})}$$
 #### Calculating Parity $P_1$ (Row 1 of $A$)
 
 $$P_1 = (244 \otimes 42) \oplus (142 \otimes 105) \oplus (167 \otimes 77) \oplus (71 \otimes 210)$$
-
 - Terms: $237 \oplus 186 \oplus 226 \oplus 186$.
 - XOR cascade: $237 \oplus 186 = 87 \implies 87 \oplus 226 = 181 \implies 181 \oplus 186 = 15 \ (0\text{x}0\text{F})$.
 $$\mathbf{P_1 = 15 \ (0\text{x}0\text{F})}$$
