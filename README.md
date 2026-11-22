@@ -34,9 +34,9 @@ SPDX-License-Identifier: MIT
 
 ## Summary
 
-**ALS SubZero** is an experimental project that stores files inside network cables while in flight. Instead of saving data to a disk or SSD, it keeps packets bouncing continuously between network reflectors.
+**ALS SubZero** is a project that stores files inside network cables while in flight. Instead of saving data to a disk or SSD, it keeps packets bouncing continuously between network reflectors.
 
-ALS stands for "Al Sami", from my name: **Samin Yasar AL Sami**.
+ALS stands for "Al Sami", from my name: **Samin Yasar AL Sami**. Reason for this name is because my stupid brain couldn't come up with a proper one.
 
 When you write a file, the engine splits it into 4096-byte blocks, adds Cauchy Reed-Solomon parity, and sends the packets out over UDP or ICMP echo. When packets return, the engine checks their CRC32C checksums, repairs any dropped chunks, spaces out outgoing packets so network buffers do not choke, and sends them right back out.
 
@@ -53,13 +53,13 @@ Here is an honest breakdown of what the project does and what it cannot do:
 - **Packet loss repair:** Uses $(4, 2)$ Cauchy Reed-Solomon over $GF(2^8)$. Any 4 chunks out of 6 reconstruct the full stripe, handling up to 33.3% chunk loss.
 - **Departure rate pacing:** Spaces outgoing packets (default 100 microseconds spacing) so operating system socket buffers do not overflow.
 - **CRC32C verification:** Uses Castagnoli CRC32C to detect corrupted or truncated frames before processing them.
-- **Interactive tools:** Comes with a terminal shell, local REST endpoints, and a web dashboard on port 8080.
-- **Zero dependencies:** Core Python engine runs on Python 3.9+ using only standard library modules.
+- **Interactive tools:** Comes with a terminal shell, localhost endpoints, and a web dashboard on port 8080. Go crazy with it!
+- **Zero dependencies:** Core Python engine runs on Python 3.9+ using only standard library modules. 
 
 ### What the system does not do
 - **Not a replacement for real storage:** This is an experiment, not a replacement for SSDs, databases, or local RAM. The client still needs basic host RAM to run Python, manage sockets, and do matrix math.
 - **Strictly volatile:** If the network drops or you stop the process, your files are bye bye.
-- **High latency:** Reading data takes a full network round trip (10 to 80 ms), which is far slower than local RAM or NVMe drives.
+- **High latency:** Reading data takes a full network round trip (10 to 80 ms), which is far slower (ofcourse, duh!) than local RAM or NVMe drives.
 - **Bandwidth overhead:** Adding 2 parity chunks to every 4 data chunks adds 50% bandwidth overhead (6 / 4 = 1.5x).
 - **Limited capacity:** Total storage is strictly capped by network speed and latency ($C = \text{Bandwidth} \times \text{RTT}$).
 
