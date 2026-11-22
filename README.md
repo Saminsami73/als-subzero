@@ -560,13 +560,13 @@ Okay in all seriousness, I structured this README.md and formatted it in a Goofy
 ### Citation (BibTeX)
 
 ```bibtex
-@software{sami2026alssubzero,
-  author = {Samin Sami},
-  title = {ALS SubZero: A Dynamic Delay-Line Network Memory Filesystem with Erasure-Coded Flight Persistence},
-  year = {2026},
-  publisher = {GitHub},
-  howpublished = {\url{https://github.com/Saminsami73/als-subzero}},
-  version = {1.0.0}
+@software{sami_2026_als_subzero,
+  author       = {Al Sami, Samin Yasar},
+  title        = {ALS SubZero: In-Flight Network Memory Filesystem with Erasure-Coded Flight Persistence},
+  year         = 2026,
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.24445017},
+  url          = {[https://doi.org/10.5281/zenodo.24445017](https://doi.org/10.5281/zenodo.24445017)}
 }
 ```
 
