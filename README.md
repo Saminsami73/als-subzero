@@ -61,7 +61,7 @@ Here is a complete honest from heart breakdown of what the project does and what
 - **Strictly volatile:** If the network drops or you stop the process, your files are bye bye. This baby is very sensitive.
 - **High latency:** Reading data takes a full network round trip (10 to 80 ms), which is far slower (ofcourse, duh!) than local RAM or NVMe drives.
 - **Bandwidth overhead:** Adding 2 parity chunks to every 4 data chunks adds 50% bandwidth overhead (6 / 4 = 1.5x).
-- **Limited capacity:** Total storage is strictly capped by network speed and latency ($C = \text{Bandwidth} \times \text{RTT}$).
+- **Limited capacity:** Total storage is strictly capped by network speed and latency ($C = \text{Bandwidth} \times \text{RTT}$). So Minecraft ain't getting in there bro.
 
 ---
 
