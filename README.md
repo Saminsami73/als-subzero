@@ -539,7 +539,7 @@ Open `http://localhost:8080/` in your browser. The dashboard polls the engine ev
 - `GET /api/v1/fs/tree?path=/`: ASCII directory tree of the virtual filesystem.
 - `GET /api/v1/fs/cat?path=<path>`: Binary or text content of an in-flight file.
 - `POST /api/v1/fs/write?path=<path>`: Write body payload into network delay-line memory. Don't be shy now!
-- `POST /api/v1/fs/mkdir?path=<path>`: Create a directory in the virtual filesystem. Din't forget to wish it a Happy Birthday!!
+- `POST /api/v1/fs/mkdir?path=<path>`: Create a new directory in the virtual filesystem. Don't forget to wish it a Happy Birthday!!
 - `DELETE /api/v1/fs/rm?path=<path>`: Delete and bye bye a file from flight memory.
 
 ---
