@@ -38,9 +38,9 @@ SPDX-License-Identifier: MIT
 
 ALS stands for "Al Sami", from my name: **Samin Yasar AL Sami**. Reason for this name is because my stupid brain couldn't come up with a proper one.
 
-When you write a file, the engine splits it into 4096-byte blocks, adds Cauchy Reed-Solomon parity, and sends the packets out over UDP or ICMP echo. When packets return, the engine checks their CRC32C checksums, repairs any dropped chunks, spaces out outgoing packets so network buffers do not choke, and sends them right back out.
+When you write a file, the engine splits it into 4096-byte blocks, adds Cauchy Reed-Solomon parity, and sends the packets out over UDP or ICMP echo. When packets return, the engine checks their CRC32C checksums, repairs any dropped chunks, spaces out outgoing packets so network buffers do not choke, and sends them right back out without a hug or a proper goodbye.
 
-The client runs locally in Python (or C on Linux) and keeps sockets and folder paths in memory. The actual file data lives in the wire. If the circulation stops, the data disappears.
+The client runs locally in Python (or C on Linux) and keeps sockets and folder paths in memory. The actual file data lives in the wire. If the circulation stops, the data disappears like Abracadabra!
 
 ---
 
@@ -119,7 +119,7 @@ On a 1 Gbps connection with 40 ms RTT, roughly 1,213 frames (4096-byte payload +
 
 ## Handwritten Mathematical Proofs (8 Problems)
 
-I worked out the Galois field tables, Cauchy matrices, Gauss-Jordan inversion, and CRC32C proofs by hand on paper before writing any code. Yes yes I know my handwriting is Oscar worthy or Doctor Certified, so if anyone needs a better explanation to these problems or a step by step guidance, hit me up! All 21 scanned pages are compiled in this PDF:
+I worked out the Galois field tables, Cauchy matrices, Gauss-Jordan inversion, and CRC32C proofs by hand on paper before writing any code. Yes, yes I know my handwriting is Doctor Certified and scan copies are 4K quality resolution, so if anyone needs a better explanation to these problems or a step by step guidance (if your eyes starts to hurt), hit me up! All 21 scanned pages are compiled in this PDF:
 
 **[Download Complete 21-Page Handwritten Calculations (PDF)](ALS_SubZero_Complete_Handwritten_Math_Calculations.pdf)**
 
