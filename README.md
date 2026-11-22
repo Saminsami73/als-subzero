@@ -119,7 +119,7 @@ On a 1 Gbps connection with 40 ms RTT, roughly 1,213 frames (4096-byte payload +
 
 ## Handwritten Mathematical Proofs (8 Problems)
 
-I worked out the Galois field tables, Cauchy matrices, Gauss-Jordan inversion, and CRC32C proofs by hand on paper before writing any code. All 21 scanned pages are compiled in this PDF:
+I worked out the Galois field tables, Cauchy matrices, Gauss-Jordan inversion, and CRC32C proofs by hand on paper before writing any code. Yes yes I know my handwriting is Oscar worthy or Doctor Certified, so if anyone needs a better explanation to these problems or a step by step guidance, hit me up! All 21 scanned pages are compiled in this PDF:
 
 **[Download Complete 21-Page Handwritten Calculations (PDF)](ALS_SubZero_Complete_Handwritten_Math_Calculations.pdf)**
 
