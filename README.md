@@ -32,38 +32,6 @@ SPDX-License-Identifier: MIT
 
 ---
 
-<!-- Schema.org Structured Metadata for Search Crawlers and AI Indexers -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "ALS SubZero",
-  "alternateName": ["ALS SubZero", "In-Flight Network Storage Engine", "Delay-Line Network Filesystem"],
-  "url": "https://als-subzero.netlify.app",
-  "applicationCategory": "Filesystem / Operating System Utility",
-  "operatingSystem": "Linux, macOS, Windows",
-  "softwareVersion": "1.0.0",
-  "author": {
-    "@type": "Person",
-    "name": "Samin Sami",
-    "alternateName": "Samin Yasar Al Sami",
-    "url": "https://github.com/Saminsami73"
-  },
-  "description": "Dynamic delay-line network memory filesystem that stores data in continuous motion across IP network paths with zero local disk writes, Cauchy Reed-Solomon erasure coding, and microsecond rate pacing.",
-  "keywords": "delay-line filesystem, in-flight network storage, Cauchy Reed-Solomon, Galois field GF(2^8), erasure coding, rate pacer, zero disk storage, Samin Sami, ALS SubZero",
-  "license": "https://opensource.org/licenses/MIT",
-  "codeRepository": "https://github.com/Saminsami73/als-subzero",
-  "featureList": [
-    "Zero local disk or SSD writes (0.0 MB/s I/O)",
-    "Cauchy Reed-Solomon GF(2^8) erasure coding (4 data + 2 parity)",
-    "Microsecond-precision departure queue pacer",
-    "Castagnoli CRC32C frame integrity validation",
-    "POSIX in-memory virtual filesystem tree",
-    "Interactive CLI shell and local REST web console"
-  ]
-}
-</script>
-
 ## Summary
 
 I designed and built **ALS SubZero** to store digital files inside network cables while in flight, instead of saving them to solid-state drives, hard disks, or local RAM chips.
