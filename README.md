@@ -34,34 +34,34 @@ SPDX-License-Identifier: MIT
 
 ## Summary
 
-I built **ALS SubZero** as an experimental delay-line memory filesystem that keeps digital files in flight across network paths, rather than writing them to physical hard disks, solid-state drives, or USB storage.
+**ALS SubZero** is an experimental project that stores files inside network cables while in flight. Instead of saving data to a disk or SSD, it keeps packets bouncing continuously between network reflectors.
 
-ALS stands for "Al Sami", taken from the first three letters of my last name: **Samin Yasar AL Sami**.
+ALS stands for "Al Sami", from my name: **Samin Yasar AL Sami**.
 
-When you store a file in ALS SubZero, the engine splits the data into 4096-byte chunks, attaches a 24-byte binary header with a Castagnoli CRC32C checksum, calculates Cauchy Reed-Solomon parity chunks, and sends the packets to remote echo reflectors. As packets return, the engine checks for drops, repairs missing chunks through matrix math, paces departure rates to prevent buffer overflow, and circulates them back into the network wire.
+When you write a file, the engine splits it into 4096-byte blocks, adds Cauchy Reed-Solomon parity, and sends the packets out over UDP or ICMP echo. When packets return, the engine checks their CRC32C checksums, repairs any dropped chunks, spaces out outgoing packets so network buffers do not choke, and sends them right back out.
 
-The client process runs in user space (Python standard library, with an optional native C daemon on Linux), using local system memory for OS socket buffers and directory metadata. The data payload persistence depends entirely on continuous network flight: if the packet circulation loop stops, the data is gone.
+The client runs locally in Python (or C on Linux) and keeps sockets and folder paths in memory. The actual file data lives in the wire. If the circulation stops, the data disappears.
 
 ---
 
 ## Capabilities and Practical Limitations
 
-ALS SubZero is an experimental delay-line memory filesystem exploring in-flight networking principles. To provide a clear and realistic assessment, here is what the system does and what it does not do:
+Here is an honest breakdown of what the project does and what it cannot do:
 
 ### What the system does
-- **Zero local disk writes:** The engine keeps file payloads circulating in network packets without writing blocks to local solid-state drives, hard disks, or USB storage (0.0 MB/s disk I/O).
-- **Parity reconstruction:** Using Cauchy Reed-Solomon (4, 2) over $GF(2^8)$, the engine reconstructs missing chunks as long as at least 4 of the 6 stripe chunks arrive intact (tolerating up to 33.3% loss per stripe).
-- **Rate pacing:** The departure queue regulates packet transmission intervals (default 100 microseconds spacing) to keep socket buffers from overflowing.
-- **Integrity verification:** Castagnoli CRC32C checksums validate incoming frames and reject tampered or truncated data before processing.
-- **Interactive interfaces:** Includes an interactive CLI shell, REST endpoints, and a localhost web UI for observing live packet telemetry and file operations.
-- **Zero external dependencies:** The core Python implementation uses only the Python 3.9+ standard library.
+- **Zero local disk writes:** Data never touches an SSD, hard drive, or USB drive while circulating (0.0 MB/s disk I/O).
+- **Packet loss repair:** Uses $(4, 2)$ Cauchy Reed-Solomon over $GF(2^8)$. Any 4 chunks out of 6 reconstruct the full stripe, handling up to 33.3% chunk loss.
+- **Departure rate pacing:** Spaces outgoing packets (default 100 microseconds spacing) so operating system socket buffers do not overflow.
+- **CRC32C verification:** Uses Castagnoli CRC32C to detect corrupted or truncated frames before processing them.
+- **Interactive tools:** Comes with a terminal shell, local REST endpoints, and a web dashboard on port 8080.
+- **Zero dependencies:** Core Python engine runs on Python 3.9+ using only standard library modules.
 
 ### What the system does not do
-- **Not a replacement for physical storage or system RAM:** ALS SubZero is an experimental prototype. The client process requires standard host RAM to execute Python or C, maintain socket handles, hold the virtual filesystem directory tree, and perform Galois field matrix calculations.
-- **Strictly volatile lifetime:** Data only exists while packets actively circulate through echo reflectors. If the network link drops, reflector nodes stop responding, or the client process terminates, in-flight data is lost.
-- **Network latency trade-off:** Reading a file requires waiting for circulating packets to arrive over the wire (network RTT, typically 10 to 80 ms), which is orders of magnitude slower than physical DRAM (nanoseconds) or NVMe SSDs (microseconds).
-- **Parity bandwidth overhead:** Adding 2 parity chunks for every 4 data chunks introduces a 50% network bandwidth overhead (6 / 4 = 1.5x).
-- **Capacity bounded by physics:** The total storage volume is strictly limited by the Bandwidth-Delay Product (Capacity = Bandwidth * RTT) of the network path and reflector round-trip times.
+- **Not a replacement for real storage:** This is an experiment, not a replacement for SSDs, databases, or local RAM. The client still needs basic host RAM to run Python, manage sockets, and do matrix math.
+- **Strictly volatile:** If the network drops or you stop the process, your files are gone.
+- **High latency:** Reading data takes a full network round trip (10 to 80 ms), which is far slower than local RAM or NVMe drives.
+- **Bandwidth overhead:** Adding 2 parity chunks to every 4 data chunks adds 50% bandwidth overhead (6 / 4 = 1.5x).
+- **Limited capacity:** Total storage is strictly capped by network speed and latency ($C = \text{Bandwidth} \times \text{RTT}$).
 
 ---
 
@@ -69,18 +69,18 @@ ALS SubZero is an experimental delay-line memory filesystem exploring in-flight 
 
 <div align="center">
   <img src="assets/architecture_overview.png" alt="ALS SubZero Architecture Overview" width="920"/>
-  <p><em>Figure 1: Five-layer architecture of ALS SubZero showing VFS, Cauchy FEC, Departure Pacer, Multi-Protocol Transports, and Remote Echo Reflectors.</em></p>
+  <p><em>Figure 1: Five-layer architecture: VFS layer, Cauchy FEC, departure pacer, network transport, and echo reflectors.</em></p>
 </div>
 
 ---
 
 ## Interactive Architecture Diagrams
 
-I created three standalone interactive HTML diagrams in the `diagrams/` folder so you can inspect code paths, data flow, and recovery sequences directly in any web browser:
+I included three interactive HTML diagrams in the `diagrams/` folder that open in any browser:
 
-1. [System Architecture Diagram](diagrams/architecture.html): Client interfaces, VFS layer, Galois field math, departure queue, and network reflection loop.
-2. [Data-Flow Diagram](diagrams/dataflow.html): Write path from user input through chunking, header packing, network flight, and return ingress.
-3. [Self-Healing Sequence Diagram](diagrams/sequence.html): Packet loss detection and reconstruction using Cauchy matrix inversion.
+1. [Architecture Diagram](diagrams/architecture.html): Client layer, VFS, Galois field math, queue pacer, and reflector loop.
+2. [Data-Flow Diagram](diagrams/dataflow.html): Packet write path from user input to network reflection and back.
+3. [Recovery Sequence Diagram](diagrams/sequence.html): Packet drop detection and Cauchy repair flow.
 
 ---
 
@@ -88,17 +88,15 @@ I created three standalone interactive HTML diagrams in the `diagrams/` folder s
 
 ### 1. Delay-Line Computing Heritage
 
-In the late 1940s, computers like EDSAC (1949) and UNIVAC (1953) used acoustic mercury delay lines. Those machines turned electric signals into sound waves moving through tubes of liquid mercury. When a wave hit the end of the tube, a quartz crystal detected it, an amplifier circuit restored the voltage, and fed the pulse back into the front.
+Early computers like EDSAC (1949) used acoustic mercury delay lines for memory. They turned electrical signals into sound pulses traveling through tubes of liquid mercury, picked them up at the other end with a quartz crystal, amplified them, and sent them back through.
 
-Fiber optic cables have that same delay property. Light traveling through glass takes time. When you send IP packets across routers, they spend measurable flight time in transit.
+Fiber optic cables work similarly. Light takes time to travel through glass, and packets take time to hop across routers.
 
-Earlier experimental projects like pingfs demonstrated that raw bytes could bounce off ICMP echo reflectors. However, they had practical limits: losing a single packet corrupted the file, and fast local networks quickly overflowed socket buffers (`ENOBUFS`).
-
-ALS SubZero addresses these specific constraints: Cauchy Reed-Solomon erasure coding repairs dropped packets within a stripe, and a departure pacer enforces microsecond transmission spacing to prevent queue overflow.
+Earlier experiments like pingfs showed you could bounce raw bytes using ICMP echo. But they broke if a single packet dropped, and fast networks quickly overflowed socket buffers. ALS SubZero fixes those two issues with Cauchy Reed-Solomon error correction and microsecond rate pacing.
 
 ### 2. Bandwidth-Delay Product (BDP) Capacity
 
-The storage capacity of any network path follows the Bandwidth-Delay Product (BDP):
+The storage capacity of any network path depends on bandwidth and round-trip time:
 
 $$\text{Capacity} = \text{Bandwidth} \times \text{RTT}$$
 
@@ -115,13 +113,13 @@ $$\text{Capacity} = \text{Bandwidth} \times \text{RTT}$$
 | **Transcontinental Internet** | 1.0 Gbps | 40.0 ms | 40,000,000 b | 5,000,000 B | 1,213 frames |
 | **Transatlantic Data Center** | 10.0 Gbps | 80.0 ms | 800,000,000 b | 100,000,000 B | 24,271 frames |
 
-On a 1 Gbps connection with 40 ms RTT, about 1,213 frames (4096-byte payload + 24-byte header = 4120 bytes) circulate in flight simultaneously.
+On a 1 Gbps connection with 40 ms RTT, roughly 1,213 frames (4096-byte payload + 24-byte header = 4120 bytes) circulate in flight simultaneously.
 
 ---
 
 ## Handwritten Mathematical Proofs (8 Problems)
 
-I solved the Galois field tables, Cauchy generator matrices, Gauss-Jordan inversion steps, and CRC32C proofs by hand on paper before writing the code. The 21-page scan collection is compiled into a single PDF document:
+I worked out the Galois field tables, Cauchy matrices, Gauss-Jordan inversion, and CRC32C proofs by hand on paper before writing any code. All 21 scanned pages are compiled in this PDF:
 
 **[Download Complete 21-Page Handwritten Calculations (PDF)](ALS_SubZero_Complete_Handwritten_Math_Calculations.pdf)**
 
@@ -134,14 +132,14 @@ I solved the Galois field tables, Cauchy generator matrices, Gauss-Jordan invers
 
 ### Problem 1: Bandwidth-Delay Product Storage Capacity
 
-Calculating how much data can physically sit inside a network wire in flight:
+How much data can sit in the wire in flight:
 $$C = B \times RTT$$
 
 - **100 Mbps / 20 ms RTT:** $100{,}000{,}000 \times 0.020 / 8 = 250{,}000\text{ bytes} \approx 244\text{ KB}$.
 - **1 Gbps / 40 ms RTT:** $1{,}000{,}000{,}000 \times 0.040 / 8 = 5{,}000{,}000\text{ bytes} \approx 5.0\text{ MB}$.
-- **Frame sizing:** At 4,096-byte payload + 24-byte header = 4,120 bytes per frame, a 1 Gbps / 40 ms path holds:
+- **Frame count:** With a 4,096-byte payload and a 24-byte header (4,120 bytes total per frame), a 1 Gbps / 40 ms link holds:
 $$N = \left\lfloor \frac{5{,}000{,}000}{4{,}120} \right\rfloor = 1{,}213\text{ frames}$$
-- **Notebook check:** In my initial draft, omitting the 24-byte header gave $1{,}220.7$ frames, overpromising link budget by 28,672 bytes. The engine strictly accounts for the full 4,120-byte frame (`src/als_subzero/core/engine.py`).
+- **Header check:** In my first draft, I forgot the 24-byte header and got 1,220 frames, which overestimated capacity by 28 KB. The engine accounts for the full 4,120-byte frame (`src/als_subzero/core/engine.py`).
 
 <div align="center">
   <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0001.png" width="48%"/>
@@ -216,9 +214,9 @@ $$a^{-1} = \frac{1}{a} = \text{EXP}[255 - \text{LOG}[a]]$$
 
 ### Problem 5: Cauchy Generator Matrix ($K=4, M=2$)
 
-A Cauchy matrix over $GF(2^8)$ guarantees that every square submatrix is invertible.
+Cauchy matrices guarantee that every square submatrix is invertible.
 
-- Disjoint sets: $X = \{0, 1\}$ (parity indices), $Y = \{2, 3, 4, 5\}$ (data indices).
+- Disjoint index sets: $X = \{0, 1\}$ (parity), $Y = \{2, 3, 4, 5\}$ (data).
 - Matrix entries: $a_{i,j} = \frac{1}{x_i \oplus y_j}$:
   - **Row 0 ($x_0 = 0$):** $1/(0 \oplus 2) = 1/2 = 142$, $1/(0 \oplus 3) = 1/3 = 244$, $1/(0 \oplus 4) = 1/4 = 71$, $1/(0 \oplus 5) = 1/5 = 167$.
   - **Row 1 ($x_1 = 1$):** $1/(1 \oplus 2) = 1/3 = 244$, $1/(1 \oplus 3) = 1/2 = 142$, $1/(1 \oplus 4) = 1/5 = 167$, $1/(1 \oplus 5) = 1/4 = 71$.
@@ -240,15 +238,15 @@ $$D = [D_0, D_1, D_2, D_3] = [42, 105, 77, 210] = [0\text{x}2\text{A}, 0\text{x}
 #### Calculating Parity $P_0$ (Row 0 of $A$)
 
 $$P_0 = (142 \otimes 42) \oplus (244 \otimes 105) \oplus (71 \otimes 77) \oplus (167 \otimes 210)$$
-- Terms via log tables: $21 \oplus 39 \oplus 84 \oplus 58$.
-- XOR cascade: $21 \oplus 39 = 50 \implies 50 \oplus 84 = 102 \implies 102 \oplus 58 = 92 \ (0\text{x}5\text{C})$.
+- Terms from log tables: $21 \oplus 39 \oplus 84 \oplus 58$.
+- XOR steps: $21 \oplus 39 = 50 \implies 50 \oplus 84 = 102 \implies 102 \oplus 58 = 92 \ (0\text{x}5\text{C})$.
 $$\mathbf{P_0 = 92 \ (0\text{x}5\text{C})}$$
 
 #### Calculating Parity $P_1$ (Row 1 of $A$)
 
 $$P_1 = (244 \otimes 42) \oplus (142 \otimes 105) \oplus (167 \otimes 77) \oplus (71 \otimes 210)$$
-- Terms: $237 \oplus 186 \oplus 226 \oplus 186$.
-- XOR cascade: $237 \oplus 186 = 87 \implies 87 \oplus 226 = 181 \implies 181 \oplus 186 = 15 \ (0\text{x}0\text{F})$.
+- Terms from log tables: $237 \oplus 186 \oplus 226 \oplus 186$.
+- XOR steps: $237 \oplus 186 = 87 \implies 87 \oplus 226 = 181 \implies 181 \oplus 186 = 15 \ (0\text{x}0\text{F})$.
 $$\mathbf{P_1 = 15 \ (0\text{x}0\text{F})}$$
 
 <div align="center">
@@ -262,9 +260,9 @@ $$\mathbf{P_1 = 15 \ (0\text{x}0\text{F})}$$
 
 ### Problem 7: Erasure Recovery via Gauss-Jordan Inversion
 
-- **Loss scenario:** Routers drop $D_1$ (105) and $D_3$ (210).
+- **Drop scenario:** Suppose the network drops $D_1$ (105) and $D_3$ (210).
 - **Surviving chunks:** $D_0=42, D_2=77, P_0=92, P_1=15$ at rows $\{0, 2, 4, 5\}$ of generator $G$.
-- **Inverting $G_{\text{surv}}$:** Row swap needed at Column 1 (swapping rows 1 and 2 to place non-zero pivot $0\text{xF}4$ on the diagonal). Inverting gives:
+- **Inverting $G_{\text{surv}}$:** We swap rows 1 and 2 to place non-zero pivot $0\text{xF}4$ on the diagonal. Gauss-Jordan inversion gives:
 
 $$G_{\text{surv}}^{-1} = \begin{bmatrix}
 0\text{x}01 & 0\text{x}00 & 0\text{x}00 & 0\text{x}00 \\
@@ -284,7 +282,7 @@ $$D_1 = (123 \otimes 42) \oplus (224 \otimes 77) \oplus (5 \otimes 92) \oplus (4
 * **Recovering $D_3$:**
 $$D_3 = (1 \otimes 42) \oplus (123 \otimes 77) \oplus (10 \otimes 92) \oplus (12 \otimes 15) = 42 \oplus 222 \oplus 98 \oplus 68 = \mathbf{210 \ (0\text{xD}2)}$$
 
-Both bytes match the original values with zero bit errors.
+Both recovered bytes match the original values exactly.
 
 <div align="center">
   <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0014.png" width="32%"/>
@@ -304,10 +302,10 @@ Both bytes match the original values with zero bit errors.
 Every frame carries a 24-byte binary header with a Castagnoli CRC32C checksum:
 $$G(x) = x^{32} + x^{28} + x^{27} + \dots + 1 = 0\text{x}1\text{EDC}6\text{F}41$$
 
-* **Why Castagnoli over IEEE 802.3:** Standard CRC32 only guarantees Hamming distance $d=4$ up to 268 bytes. Castagnoli maintains $d=4$ across the full 4,096-byte chunk payload.
-* **Tamper detection:** Flipping 1 bit (e.g. $0\text{x}2\text{A} \to 0\text{x}2\text{B}$) causes an immediate CRC mismatch. The frame is dropped and reconstructed via Cauchy parity.
-* **Undetected error probability:** $P = 2^{-32} \approx 2.33 \times 10^{-10}$ (1 in 4.3 billion).
-* Verified in tests: `python tests/run_all.py` confirms `test_crc_tamper_detection ... ok`.
+- **Why Castagnoli over IEEE 802.3:** Standard CRC32 guarantees Hamming distance $d=4$ only up to 268 bytes. Castagnoli keeps $d=4$ across the full 4,096-byte chunk payload.
+- **Tamper detection:** Flipping 1 bit in transit causes an immediate CRC mismatch. The engine drops the frame and rebuilds it through Cauchy parity.
+- **Undetected error probability:** $P = 2^{-32} \approx 2.33 \times 10^{-10}$ (about 1 in 4.3 billion).
+- **Verified in tests:** `python tests/run_all.py` confirms `test_crc_tamper_detection ... ok`.
 
 <div align="center">
   <img src="ALS_SubZero_Complete_Handwritten_Math_Calculations/12997b66-01de-4b2a-8d47-4611a0c0ad21-0019.png" width="48%"/>
@@ -319,17 +317,17 @@ $$G(x) = x^{32} + x^{28} + x^{27} + \dots + 1 = 0\text{x}1\text{EDC}6\text{F}41$
 
 ### Microsecond Rate Pacing & Queue Stability
 
-The departure pacer releases packets according to:
+To keep socket buffers from overflowing (`ENOBUFS`), the departure pacer spaces out packet transmissions:
 
 ```
 t_release = t_now + max(0, T_target - (t_now - t_epoch))
 ```
 
-- Enforces minimum spacing: `delta_min = 100 microseconds` between consecutive packet departures.
-- Departure service rate: $\mu = 1 / 100\,\mu\text{s} = 10{,}000\text{ packets/s}$.
-- Average arrival rate: $\lambda = 1{,}200\text{ packets/s}$.
-- Utilization factor: $\rho = \lambda / \mu = 1{,}200 / 10{,}000 = 0.12 \ (12\%)$.
-- Under Lindley's condition ($\rho < 1$), the queue is stable, preventing socket buffer exhaustion drops (`ENOBUFS`).
+- **Minimum spacing:** $100\,\mu\text{s}$ between packet departures.
+- **Service rate:** $\mu = 1 / 100\,\mu\text{s} = 10{,}000\text{ packets/s}$.
+- **Typical traffic:** $\lambda = 1{,}200\text{ packets/s}$.
+- **Queue utilization:** $\rho = \lambda / \mu = 1{,}200 / 10{,}000 = 0.12 \ (12\%)$.
+- Under Lindley's condition ($\rho < 1$), the queue remains stable and avoids drops.
 
 <div align="center">
   <img src="assets/recovery_pipeline.png" alt="In-Flight Self-Healing Lifecycle" width="920"/>
@@ -378,7 +376,7 @@ I benchmarked ALS SubZero by circulating 16,384 bytes of data across 60 network 
 | **5.0%** | 16,384 B | 1.91 s | 1,476 / 1,386 | 78 | 100% Bit-Exact | **PASS** |
 | **10.0%** | 16,384 B | 2.12 s | 1,481 / 1,307 | 151 | 100% Bit-Exact | **PASS** |
 
-Even when 151 packets were dropped by the network, the autonomous scrubber reconstructed every missing byte. The final file matched the source byte for byte.
+Even when 151 packets were dropped by the network, the background scrubber rebuilt every missing byte in flight. The recovered file matched the original input byte for byte.
 
 ---
 
@@ -451,32 +449,32 @@ This is the exact file layout of the repository:
 ## Quick Start & Verification
 
 ### Requirements
-- Python 3.9 or higher (standard library only, zero external pip packages needed).
+- Python 3.9 or higher (standard library only, zero pip installs needed).
 - Optional for native C engine on Linux: GCC, `make`, and `libfuse-dev`.
 
-### 1. Run the Full Unit Test Suite (20 Tests)
+### 1. Run the Unit Test Suite (20 Tests)
 ```bash
 python tests/run_all.py
 ```
-Runs all 20 test cases covering framing, CRC32C, Cauchy FEC math, pacer scheduling, and VFS inode operations in under 1 second.
+Runs all 20 test cases covering framing, CRC32C, Cauchy FEC math, pacer scheduling, and VFS operations in under 1 second.
 
-### 2. Run the Reliability & Loss Benchmark
+### 2. Run the Packet Loss Benchmark
 ```bash
 python scripts/run_benchmark.py
 ```
-Tests 0%, 2%, 5%, and 10% packet drop rates with automated verification.
+Tests 0%, 2%, 5%, and 10% simulated packet loss with automated verification.
 
 ### 3. Run the Live Demonstration
 ```bash
 python scripts/run_demo.py
 ```
-Injects files into flight, animates circulation cycles, and verifies 100% bit-exact recovery.
+Injects files into flight, runs circulation cycles, and verifies 100% bit-exact recovery.
 
 ### 4. Launch the Interactive Shell
 ```bash
 python -m als_subzero.cli.main shell
 ```
-Starts the interactive terminal shell. You can explore directories, inject files into flight, inspect chunk metadata, run benchmarks, and launch the web UI.
+Opens the terminal shell to browse directories, write and read files from the wire, inspect chunk metadata, and launch the web UI.
 
 ---
 
@@ -523,7 +521,7 @@ Available Commands:
 
 ## Web Dashboard & REST Control Console
 
-> 🌐 **Live Website Deployment:** [https://als-subzero.netlify.app](https://als-subzero.netlify.app) provides the hosted interactive showcase, full handwritten math gallery, and SVG vector diagrams online.
+> 🌐 **Live Website:** [https://als-subzero.netlify.app](https://als-subzero.netlify.app) -- Interactive web demo, handwritten math gallery, and vector diagrams.
 
 <div align="center">
   <img src="assets/localhost-ui.png" alt="ALS SubZero Localhost Web Console" width="920"/>
@@ -548,7 +546,7 @@ Open `http://localhost:8080/` in your browser. The dashboard polls the engine ev
 
 ## Scientific Paper
 
-The scientific paper describing the theoretical foundations, Galois field arithmetic, and empirical benchmark data is included in this repository:
+The scientific paper detailing the theoretical math, Galois field proofs, and benchmark data is included in the repository:
 
 - **Paper Title**: *ALS SubZero: A Dynamic Delay-Line Network Memory Filesystem with Erasure-Coded Flight Persistence*
 - **Author**: Samin Sami
