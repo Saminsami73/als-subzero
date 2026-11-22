@@ -25,7 +25,7 @@ SPDX-License-Identifier: MIT
 [![Research Paper: PDF](https://img.shields.io/badge/Paper-Scientific%20Preprint%20PDF-red.svg)](ALS_SubZero_Research_Paper.pdf)
 [![Handwritten Math: 21 Pages](https://img.shields.io/badge/Handwritten%20Math-21%20Pages%20PDF-purple.svg)](ALS_SubZero_Complete_Handwritten_Math_Calculations.pdf)
 [![CodeMeta](https://img.shields.io/badge/Metadata-CodeMeta%202.0-informational.svg)](codemeta.json)
-
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.24445017-blue.svg)](https://doi.org/10.5281/zenodo.24445017)
 </div>
 
 > 🌐 **Live Website:** [https://als-subzero.netlify.app](https://als-subzero.netlify.app) -- Interactive vector diagrams, 21 handwritten math proof sheets, benchmark charts, and research paper previews. Yep all in there bro!
