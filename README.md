@@ -34,7 +34,7 @@ SPDX-License-Identifier: MIT
 
 ## Summary
 
-I designed and built **ALS SubZero** to store digital files inside network cables while in flight, instead of saving them to solid-state drives, hard disks, or local RAM chips.
+I designed and built **ALS SubZero** to store digital files inside network cables while in flight, instead of saving them to solid-state drives, hard disks, or USB drives.
 
 ALS stands for "Al Sami", taken from the first three letters of my last name: **Samin Yasar AL Sami**.
 
